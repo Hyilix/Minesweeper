@@ -9,64 +9,64 @@ Map::~Map() {
 }
 
 void Map::create_empty_map() {
-    Map::map = new Tile**[Map::dimensions.first];
+    this->map = new Tile**[this->dimensions.first];
 
-    for (int i = 0; i < Map::dimensions.first; i++) {
-        Map::map[i] = new Tile*[Map::dimensions.second];
+    for (int i = 0; i < this->dimensions.first; i++) {
+        this->map[i] = new Tile*[this->dimensions.second];
     }
 }
 
 void Map::create_empty_map(std::pair<unsigned int, unsigned int> dimensions) {
-    Map::map = new Tile**[dimensions.first];
+    this->map = new Tile**[dimensions.first];
 
     for (int i = 0; i < dimensions.first; i++) {
-        Map::map[i] = new Tile*[dimensions.second];
+        this->map[i] = new Tile*[dimensions.second];
     }
 
-    Map::set_dimensions(dimensions);
+    this->set_dimensions(dimensions);
 }
 
 void Map::create_empty_map(unsigned int width, unsigned int height) {
-    Map::map = new Tile**[width];
+    this->map = new Tile**[width];
 
     for (int i = 0; i < width; i++) {
-        Map::map[i] = new Tile*[height];
+        this->map[i] = new Tile*[height];
     }
 
-    Map::set_dimensions(width, height);
+    this->set_dimensions(width, height);
 }
 
 void Map::set_dimensions(std::pair<unsigned int, unsigned int> dimensions) {
-    Map::dimensions = dimensions;
+    this->dimensions = dimensions;
 }
 
 void Map::set_dimensions(unsigned int width, unsigned int height) {
-    Map::dimensions.first = width;
-    Map::dimensions.second = height;
+    this->dimensions.first = width;
+    this->dimensions.second = height;
 }
 
 void Map::set_bomb_count(unsigned int count) {
-    Map::bombs = count;
+    this->bombs = count;
 }
 
 void Map::set_flag_count(unsigned int count) {
-    Map::flags = count;
+    this->flags = count;
 }
 
 std::pair<unsigned int, unsigned int> Map::get_dimensions() {
-    return Map::dimensions;
+    return this->dimensions;
 }
 
 unsigned int Map::get_bomb_count() {
-    return Map::bombs;
+    return this->bombs;
 }
 
 unsigned int Map::get_flag_count() {
-    return Map::flags;
+    return this->flags;
 }
 
 Tile ***Map::get_map() {
-    return Map::map;
+    return this->map;
 }
 
 Tile *Map::get_tile_from_position(std::pair<unsigned int, unsigned int> position) {

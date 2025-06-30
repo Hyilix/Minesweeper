@@ -26,21 +26,17 @@ class Tile {
         void set_flag(bool value);
         bool is_flagged();
 
+        void set_bomb(bool value);
+        bool is_bomb();
+
     private:
         std::pair<unsigned int, unsigned int> position;
         std::pair<unsigned int, unsigned int> size;
 
+        // the number of bombs near this tile. 
         uint8_t tile_number = 0;
         bool has_flag = false;
-};
-
-class BombTile : public Tile {
-    public:
-        BombTile();
-        ~BombTile();
-
-    private:
-        uint8_t tile_number = 10;
+        bool has_bomb = false;
 };
 
 #endif

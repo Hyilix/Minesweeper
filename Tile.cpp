@@ -13,36 +13,44 @@ void Tile::click_action() {
 }
 
 std::pair<unsigned int, unsigned int> Tile::get_position() {
-    return Tile::position;
+    return this->position;
 }
 
 std::pair<unsigned int, unsigned int> Tile::get_size() {
-    return Tile::size;
+    return this->size;
 }
 
 void Tile::set_position(std::pair<unsigned int, unsigned int> position) {
-    Tile::position = position;
+    this->position = position;
 }
 
 void Tile::set_position(unsigned int x, unsigned int y) {
-    Tile::position.first = x;
-    Tile::position.second = y;
+    this->position.first = x;
+    this->position.second = y;
 }
 
 void Tile::set_size(std::pair<unsigned int, unsigned int> size) {
-    Tile::size = size;
+    this->size = size;
 }
 
 void Tile::set_size(unsigned int width, unsigned int height) {
-    Tile::size.first = width;
-    Tile::size.second = height;
+    this->size.first = width;
+    this->size.second = height;
 }
 
 void Tile::set_flag(bool value) {
-    Tile::has_flag = value;
+    this->has_flag = value;
 }
 
 bool Tile::is_flagged() {
-    return Tile::has_flag;
+    return this->has_flag;
+}
+
+void Tile::set_bomb(bool value) {
+    this->has_bomb = value;
+}
+
+bool Tile::is_bomb() {
+    return this->has_bomb;
 }
 

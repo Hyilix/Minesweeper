@@ -19,11 +19,11 @@ void GameHandler::init(Uint32 flags) {
 }
 
 void GameHandler::create_window(char *name, int x, int y, int h, int w, Uint32 flags) {
-    GameHandler::window = SDL_CreateWindow(name, x, y, h, w, flags);
+    this->window = SDL_CreateWindow(name, x, y, h, w, flags);
 }
 
 void GameHandler::create_renderer(SDL_Window *window, int index, Uint32 flags) {
-    GameHandler::renderer = SDL_CreateRenderer(window, index, flags);
+    this->renderer = SDL_CreateRenderer(window, index, flags);
 }
 
 void GameHandler::event_handler() {
@@ -33,7 +33,7 @@ void GameHandler::event_handler() {
         switch (event.type) {
 
         case SDL_QUIT:
-            GameHandler::set_running(false);
+            this->set_running(false);
             break;
 
         case SDL_KEYDOWN:
@@ -42,7 +42,7 @@ void GameHandler::event_handler() {
 
             // ESC key
             case 41:
-                GameHandler::set_running(false);
+                this->set_running(false);
                 break;
 
             case SDL_SCANCODE_W:
@@ -55,17 +55,17 @@ void GameHandler::event_handler() {
 }
 
 void GameHandler::set_running(bool value) {
-    GameHandler::running = value;
+    this->running = value;
 }
 
 bool GameHandler::is_running() {
-    return GameHandler::running;
+    return this->running;
 }
 
 SDL_Window *GameHandler::get_window() {
-    return GameHandler::window;
+    return this->window;
 }
 
 SDL_Renderer *GameHandler::get_renderer() {
-    return GameHandler::renderer;
+    return this->renderer;
 }
