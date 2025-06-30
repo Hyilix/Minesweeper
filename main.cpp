@@ -8,9 +8,11 @@
 GameHandler *gamehandler = new GameHandler;
 
 int main(void) {
+    char gamename[] = "Minesweeper";
+
     // initialise and create window / renderer
     gamehandler->init();
-    gamehandler->create_window("Minesweeper", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, 0);
+    gamehandler->create_window(gamename, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, 0);
     gamehandler->create_renderer(gamehandler->get_window(), -1, 0);
 
     gamehandler->set_running(true);

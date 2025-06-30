@@ -20,7 +20,7 @@ class Map {
         std::pair<unsigned int, unsigned int> get_dimensions();
         unsigned int get_bomb_count();
         unsigned int get_flag_count();
-        Tile **get_map();
+        Tile ***get_map();
 
         Tile *get_tile_from_position(std::pair<unsigned int, unsigned int> position);
         Tile *get_tile_from_position(unsigned int x, unsigned int y);
@@ -34,7 +34,7 @@ class Map {
         unsigned int bombs;
         unsigned int flags;
 
-        Tile **map;
+        Tile ***map;
 };
 
 #endif

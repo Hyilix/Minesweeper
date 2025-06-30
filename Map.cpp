@@ -9,28 +9,28 @@ Map::~Map() {
 }
 
 void Map::create_empty_map() {
-    Map::map = new Tile*[Map::dimensions.first];
+    Map::map = new Tile**[Map::dimensions.first];
 
     for (int i = 0; i < Map::dimensions.first; i++) {
-        Map::map[i] = new Tile[Map::dimensions.second];
+        Map::map[i] = new Tile*[Map::dimensions.second];
     }
 }
 
 void Map::create_empty_map(std::pair<unsigned int, unsigned int> dimensions) {
-    Map::map = new Tile*[dimensions.first];
+    Map::map = new Tile**[dimensions.first];
 
     for (int i = 0; i < dimensions.first; i++) {
-        Map::map[i] = new Tile[dimensions.second];
+        Map::map[i] = new Tile*[dimensions.second];
     }
 
     Map::set_dimensions(dimensions);
 }
 
 void Map::create_empty_map(unsigned int width, unsigned int height) {
-    Map::map = new Tile*[width];
+    Map::map = new Tile**[width];
 
     for (int i = 0; i < width; i++) {
-        Map::map[i] = new Tile[height];
+        Map::map[i] = new Tile*[height];
     }
 
     Map::set_dimensions(width, height);
@@ -65,7 +65,7 @@ unsigned int Map::get_flag_count() {
     return Map::flags;
 }
 
-Tile **Map::get_map() {
+Tile ***Map::get_map() {
     return Map::map;
 }
 
