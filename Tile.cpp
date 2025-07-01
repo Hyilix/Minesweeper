@@ -1,11 +1,12 @@
 #include "Tile.hpp"
+#include <SDL2/SDL_render.h>
 
 Tile::Tile() {
     std::cout << "Tile initialised!" << std::endl;
 
     // set default colors
-    this->set_hidden_color(128, 128, 128, 0);
-    this->set_exposed_color(32, 32, 32, 0);
+    this->set_hidden_color(255, 255, 255, 0);
+    this->set_exposed_color(128, 128, 128, 0);
 }
 
 Tile::~Tile() {
@@ -58,6 +59,14 @@ bool Tile::is_bomb() {
     return this->has_bomb;
 }
 
+void Tile::set_exposed(bool value) {
+    this->has_exposed = value;
+}
+
+bool Tile::is_exposed() {
+    return this->has_exposed;
+}
+
 void Tile::set_hidden_color(SDL_Color color) {
     this->hidden_color = color;
 }
@@ -90,5 +99,42 @@ SDL_Color Tile::get_exposed_color() {
 
 void Tile::switch_to_bomb_color() {
     this->set_exposed_color(255, 0, 0, 0);
+}
+
+void Tile::switch_to_flag_color() {
+    this->set_hidden_color(0, 255, 0, 0);
+}
+
+void Tile::switch_to_normal_color() {
+    this->set_hidden_color(255, 255, 255, 0);
+}
+
+void Tile::create_tile_rectangle() {
+    this->tile_rect = {(int)this->position.first,
+                        (int)this->position.second,
+                        (int)this->size.first,
+                        (int)this->size.second};
+}
+
+SDL_Rect Tile::get_tile_rectangle() {
+    return this->tile_rect;
+}
+
+void Tile::draw_tile(SDL_Renderer *renderer) {
+    SDL_Color actual_color = exposed_color;
+
+    // determine the color
+    if (this->is_exposed() == true) {
+        actual_color = hidden_color;
+    }
+
+    // draw the rectangle
+    SDL_SetRenderDrawColor(renderer, actual_color.r,
+                                    actual_color.g,
+                                    actual_color.b,
+                                    actual_color.a);
+
+    SDL_RenderFillRect(renderer, &this->tile_rect);
+    SDL_RenderDrawRect(renderer, &this->tile_rect);
 }
 

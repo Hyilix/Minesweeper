@@ -75,7 +75,7 @@ void GameHandler::simple_render() {
     SDL_SetRenderDrawColor(this->renderer, this->color.r, this->color.g, this->color.b, this->color.a);
     SDL_RenderClear(this->renderer);
 
-
+    (this->get_map())->render_map(this->get_renderer());
 
     // update the screen
     SDL_RenderPresent(this->renderer);
@@ -100,7 +100,7 @@ SDL_Renderer *GameHandler::get_renderer() {
 void GameHandler::create_map() {
     Map *new_map = new Map;
 
-    new_map->create_empty_map(10, 10);
+    new_map->create_empty_map(1, 1);
     new_map->set_bomb_count(0);
     new_map->set_flag_count(0);
 

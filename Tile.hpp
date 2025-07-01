@@ -31,6 +31,9 @@ class Tile {
         void set_bomb(bool value);
         bool is_bomb();
 
+        void set_exposed(bool value);
+        bool is_exposed();
+
         void set_hidden_color(SDL_Color color);
         void set_hidden_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
         void set_exposed_color(SDL_Color color);
@@ -40,6 +43,13 @@ class Tile {
         SDL_Color get_exposed_color();
 
         void switch_to_bomb_color();
+        void switch_to_flag_color();
+        void switch_to_normal_color();
+
+        void create_tile_rectangle();
+        SDL_Rect get_tile_rectangle();
+
+        void draw_tile(SDL_Renderer *renderer);
 
     private:
         std::pair<unsigned int, unsigned int> position;
@@ -47,12 +57,15 @@ class Tile {
 
         // the number of bombs near this tile. 
         uint8_t tile_number = 0;
+        bool has_exposed = false;
 
         bool has_flag = false;
         bool has_bomb = false;
 
         SDL_Color hidden_color;
         SDL_Color exposed_color;
+
+        SDL_Rect tile_rect;
 };
 
 #endif

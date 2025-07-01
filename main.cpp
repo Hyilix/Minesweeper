@@ -18,6 +18,8 @@ int main(void) {
 
     gamehandler->create_map();
 
+    (gamehandler->get_map())->fill_map(gamehandler->get_renderer());
+
     // set renderer to color
     // SDL_SetRenderDrawColor(gamehandler->get_renderer(), 255, 0, 0, 0);
     // SDL_RenderClear(gamehandler->get_renderer());

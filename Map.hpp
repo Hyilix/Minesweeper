@@ -17,6 +17,13 @@ class Map {
         void set_bomb_count(unsigned int count);
         void set_flag_count(unsigned int count);
 
+        void set_universal_tile_size(std::pair<unsigned int, unsigned int> size);
+        void set_universal_tile_size(unsigned int width, unsigned int height);
+        std::pair<unsigned int, unsigned int> get_universal_tile_size();
+
+        void fill_map(SDL_Renderer *renderer);
+        void render_map(SDL_Renderer *renderer);
+
         std::pair<unsigned int, unsigned int> get_dimensions();
         unsigned int get_bomb_count();
         unsigned int get_flag_count();
@@ -32,10 +39,13 @@ class Map {
     private:
         // dimesnions in tiles
         std::pair<unsigned int, unsigned int> dimensions;
+
+        std::pair<unsigned int, unsigned int> universal_tile_size;
+
         unsigned int bombs;
         unsigned int flags;
 
-        Tile ***map;
+        Tile ***tiles;
 };
 
 #endif
