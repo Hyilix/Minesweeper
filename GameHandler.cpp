@@ -1,5 +1,6 @@
 #include "GameHandler.hpp"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_render.h>
 
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
@@ -24,6 +25,21 @@ void GameHandler::create_window(char *name, int x, int y, int h, int w, Uint32 f
 
 void GameHandler::create_renderer(SDL_Window *window, int index, Uint32 flags) {
     this->renderer = SDL_CreateRenderer(window, index, flags);
+}
+
+void GameHandler::set_background_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+    this->color.r = r;
+    this->color.g = g;
+    this->color.b = b;
+    this->color.a = a;
+}
+
+void GameHandler::set_background_color(SDL_Color color) {
+    this->color = color;
+}
+
+SDL_Color GameHandler::get_background_color() {
+    return this->color;
 }
 
 void GameHandler::event_handler() {
@@ -54,6 +70,17 @@ void GameHandler::event_handler() {
     }
 }
 
+void GameHandler::simple_render() {
+    // clear the screen
+    SDL_SetRenderDrawColor(this->renderer, this->color.r, this->color.g, this->color.b, this->color.a);
+    SDL_RenderClear(this->renderer);
+
+
+
+    // update the screen
+    SDL_RenderPresent(this->renderer);
+}
+
 void GameHandler::set_running(bool value) {
     this->running = value;
 }
@@ -69,3 +96,18 @@ SDL_Window *GameHandler::get_window() {
 SDL_Renderer *GameHandler::get_renderer() {
     return this->renderer;
 }
+
+void GameHandler::create_map() {
+    Map *new_map = new Map;
+
+    new_map->create_empty_map(10, 10);
+    new_map->set_bomb_count(0);
+    new_map->set_flag_count(0);
+
+    this->map = new_map;
+}
+
+Map *GameHandler::get_map() {
+    return this->map;
+}
+

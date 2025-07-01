@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <utility>
 
+#include <SDL2/SDL.h>
+
 #define TILE_DEFAULT_SIZE 50
 
 class Tile {
@@ -29,14 +31,28 @@ class Tile {
         void set_bomb(bool value);
         bool is_bomb();
 
+        void set_hidden_color(SDL_Color color);
+        void set_hidden_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+        void set_exposed_color(SDL_Color color);
+        void set_exposed_color(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+
+        SDL_Color get_hidden_color();
+        SDL_Color get_exposed_color();
+
+        void switch_to_bomb_color();
+
     private:
         std::pair<unsigned int, unsigned int> position;
         std::pair<unsigned int, unsigned int> size;
 
         // the number of bombs near this tile. 
         uint8_t tile_number = 0;
+
         bool has_flag = false;
         bool has_bomb = false;
+
+        SDL_Color hidden_color;
+        SDL_Color exposed_color;
 };
 
 #endif

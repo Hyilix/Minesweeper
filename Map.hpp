@@ -30,6 +30,7 @@ class Map {
         Tile ***get_tile_neighbors(Tile *tile);
 
     private:
+        // dimesnions in tiles
         std::pair<unsigned int, unsigned int> dimensions;
         unsigned int bombs;
         unsigned int flags;

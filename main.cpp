@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
 
 #include <iostream>
 
@@ -16,6 +15,8 @@ int main(void) {
     gamehandler->create_renderer(gamehandler->get_window(), -1, 0);
 
     gamehandler->set_running(true);
+
+    gamehandler->create_map();
 
     // set renderer to color
     // SDL_SetRenderDrawColor(gamehandler->get_renderer(), 255, 0, 0, 0);
@@ -38,6 +39,7 @@ int main(void) {
 
     while (gamehandler->is_running()) {
         gamehandler->event_handler();
+        gamehandler->simple_render();
     }
 
     delete gamehandler;
