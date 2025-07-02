@@ -20,7 +20,7 @@ class GameHandler {
         SDL_Color get_background_color();
 
         void event_handler();
-        void simple_render();
+        void render_logic();
 
         bool is_running();
         SDL_Window *get_window();
@@ -31,6 +31,12 @@ class GameHandler {
         void create_map();
         Map *get_map();
 
+        void set_fps(unsigned int FPS);
+        unsigned int get_fps();
+
+        void calculate_frame_delay(); 
+        unsigned int get_frame_delay();
+
     private:
         bool running = 0;
         SDL_Window *window;
@@ -40,6 +46,9 @@ class GameHandler {
 
         // background color
         SDL_Color color;
+
+        unsigned int FPS;
+        unsigned int frame_delay;
 };
 
 #endif

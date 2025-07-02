@@ -6,6 +6,8 @@ GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
 
     // init functions
+    this->set_fps(255);
+    this->calculate_frame_delay();
 }
 
 GameHandler::~GameHandler() {
@@ -70,7 +72,7 @@ void GameHandler::event_handler() {
     }
 }
 
-void GameHandler::simple_render() {
+void GameHandler::render_logic() {
     // clear the screen
     SDL_SetRenderDrawColor(this->renderer, this->color.r, this->color.g, this->color.b, this->color.a);
     SDL_RenderClear(this->renderer);
@@ -100,7 +102,7 @@ SDL_Renderer *GameHandler::get_renderer() {
 void GameHandler::create_map() {
     Map *new_map = new Map;
 
-    new_map->create_empty_map(1, 1);
+    new_map->create_empty_map();
     new_map->set_bomb_count(0);
     new_map->set_flag_count(0);
 
@@ -109,5 +111,21 @@ void GameHandler::create_map() {
 
 Map *GameHandler::get_map() {
     return this->map;
+}
+
+void GameHandler::set_fps(unsigned int FPS) {
+    this->FPS = FPS;
+}
+
+unsigned int GameHandler::get_fps() {
+    return this->FPS;
+}
+
+void GameHandler::calculate_frame_delay() {
+    this->frame_delay = 1000 / this->get_fps();
+}
+
+unsigned int GameHandler::get_frame_delay() {
+    return this->frame_delay;
 }
 

@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include <SDL2/SDL_timer.h>
 #include <iostream>
 
 #include "GameHandler.hpp"
@@ -11,37 +12,37 @@ int main(void) {
 
     // initialise and create window / renderer
     gamehandler->init();
-    gamehandler->create_window(gamename, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, 0);
+    gamehandler->create_map();
+
+    // get window size
+    unsigned int window_x_size = (gamehandler->get_map())->get_universal_tile_size().first;
+    window_x_size *= (gamehandler->get_map())->get_dimensions().first;
+
+    unsigned int window_y_size = (gamehandler->get_map())->get_universal_tile_size().second;
+    window_y_size *= (gamehandler->get_map())->get_dimensions().second;
+
+    // create window and renderer
+    gamehandler->create_window(gamename, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_x_size, window_y_size, 0);
     gamehandler->create_renderer(gamehandler->get_window(), -1, 0);
 
     gamehandler->set_running(true);
 
-    gamehandler->create_map();
-
     (gamehandler->get_map())->fill_map(gamehandler->get_renderer());
 
-    // set renderer to color
-    // SDL_SetRenderDrawColor(gamehandler->get_renderer(), 255, 0, 0, 0);
-    // SDL_RenderClear(gamehandler->get_renderer());
-    //
-    // // update screen
-    // SDL_RenderPresent(gamehandler->get_renderer());
-    //
-    // // new surface
-    // // SDL_Surface *screen_surface = SDL_GetWindowSurface(window);
-    // SDL_Rect rectangle = {0, 0, 100, 100};
-    //
-    // Uint32 color = 255;
-    //
-    // SDL_SetRenderDrawColor(gamehandler->get_renderer(), 0, 0, 255, 0);
-    // SDL_RenderFillRect(gamehandler->get_renderer(), &rectangle);
-    // SDL_RenderDrawRect(gamehandler->get_renderer(), &rectangle);
-    //
-    // SDL_RenderPresent(gamehandler->get_renderer());
+    Uint32 frame_start;
+    int frame_time;
 
     while (gamehandler->is_running()) {
+        frame_start = SDL_GetTicks();
+
         gamehandler->event_handler();
-        gamehandler->simple_render();
+        gamehandler->render_logic();
+
+        frame_time = SDL_GetTicks() - frame_start;
+
+        if (gamehandler->get_frame_delay() > frame_time) {
+            SDL_Delay(gamehandler->get_frame_delay() - frame_time);
+        }
     }
 
     delete gamehandler;

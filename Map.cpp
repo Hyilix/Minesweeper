@@ -4,6 +4,7 @@ Map::Map() {
     std::cout << "Map initialised!" << std::endl;
 
     this->set_universal_tile_size(50, 50);
+    this->set_dimensions(5, 10);
 }
 
 Map::~Map() {
