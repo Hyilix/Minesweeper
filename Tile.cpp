@@ -1,11 +1,10 @@
 #include "Tile.hpp"
-#include <SDL2/SDL_render.h>
 
 Tile::Tile() {
     std::cout << "Tile initialised!" << std::endl;
 
     // set default colors
-    this->set_hidden_color(255, 255, 255, 0);
+    this->set_hidden_color(180, 180, 180, 0);
     this->set_exposed_color(128, 128, 128, 0);
 }
 
@@ -121,11 +120,11 @@ SDL_Rect Tile::get_tile_rectangle() {
 }
 
 void Tile::draw_tile(SDL_Renderer *renderer) {
-    SDL_Color actual_color = exposed_color;
+    SDL_Color actual_color = this->get_exposed_color();
 
     // determine the color
-    if (this->is_exposed() == true) {
-        actual_color = hidden_color;
+    if (this->is_exposed() == false) {
+        actual_color = this->get_hidden_color();
     }
 
     // draw the rectangle

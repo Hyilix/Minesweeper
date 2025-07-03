@@ -1,6 +1,4 @@
 #include "GameHandler.hpp"
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_render.h>
 
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
@@ -19,6 +17,7 @@ GameHandler::~GameHandler() {
 
 void GameHandler::init(Uint32 flags) {
     SDL_Init(flags);
+    this->set_background_color(0, 0, 0, 0);
 }
 
 void GameHandler::create_window(char *name, int x, int y, int h, int w, Uint32 flags) {
@@ -67,6 +66,15 @@ void GameHandler::event_handler() {
                 std::cout << "Key W pressed\n";
                 break;
             }
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            Sint32 mouse_x = event.button.x;
+            Sint32 mouse_y = event.button.y;
+
+            Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
+
+            temp_tile->set_hidden_color(0, 0, 0, 0);
             break;
         }
     }

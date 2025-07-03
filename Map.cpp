@@ -85,7 +85,7 @@ void Map::fill_map(SDL_Renderer *renderer) {
 
             temp_tile->create_tile_rectangle();
 
-            this->get_map()[y][x] = temp_tile;
+            this->get_tiles()[y][x] = temp_tile;
             temp_tile->draw_tile(renderer);
         }
     }
@@ -95,12 +95,12 @@ void Map::render_map(SDL_Renderer *renderer) {
     unsigned int x_pos = this->get_dimensions().first;
     unsigned int y_pos = this->get_dimensions().second;
 
-    unsigned int x_size = this->get_universal_tile_size().first;
-    unsigned int y_size = this->get_universal_tile_size().second;
+    // unsigned int x_size = this->get_universal_tile_size().first;
+    // unsigned int y_size = this->get_universal_tile_size().second;
 
     for (unsigned int y = 0; y < y_pos; y++) {
         for (unsigned int x = 0; x < x_pos; x++) {
-            (this->get_map()[y][x])->draw_tile(renderer);
+            (this->get_tiles()[y][x])->draw_tile(renderer);
         }
     }
 }
@@ -117,16 +117,50 @@ unsigned int Map::get_flag_count() {
     return this->flags;
 }
 
-Tile ***Map::get_map() {
+Tile ***Map::get_tiles() {
     return this->tiles;
 }
 
+std::pair<unsigned int, unsigned int> Map::get_sanitized_position(std::pair<unsigned int, unsigned int> position) {
+    unsigned int tile_x_size = this->get_universal_tile_size().first;
+    unsigned int tile_y_size = this->get_universal_tile_size().second;
+
+    std::pair<unsigned int, unsigned int> sanitized;
+
+    sanitized.first = position.first / tile_x_size;
+    sanitized.second = position.second / tile_y_size;
+
+    return sanitized;
+}
+
+std::pair<unsigned int, unsigned int> Map::get_sanitized_position(unsigned int x, unsigned int y) {
+    unsigned int tile_x_size = this->get_universal_tile_size().first;
+    unsigned int tile_y_size = this->get_universal_tile_size().second;
+
+    std::pair<unsigned int, unsigned int> sanitized;
+
+    sanitized.first = x / tile_x_size;
+    sanitized.second = y / tile_y_size;
+
+    return sanitized;
+}
+
 Tile *Map::get_tile_from_position(std::pair<unsigned int, unsigned int> position) {
-    // TODO
+    std::pair<unsigned int, unsigned int> sanitized = this->get_sanitized_position(position);
+
+    unsigned int y_sanitized = sanitized.second;
+    unsigned int x_sanitized = sanitized.first;
+
+    return this->get_tiles()[y_sanitized][x_sanitized];
 }
 
 Tile *Map::get_tile_from_position(unsigned int x, unsigned int y) {
-    // TODO
+    std::pair<unsigned int, unsigned int> sanitized = this->get_sanitized_position(x, y);
+
+    unsigned int y_sanitized = sanitized.second;
+    unsigned int x_sanitized = sanitized.first;
+
+    return this->get_tiles()[y_sanitized][x_sanitized];
 }
 
 Tile ***Map::get_tile_neighbors(std::pair<unsigned int, unsigned int> position) {

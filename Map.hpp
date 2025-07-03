@@ -27,7 +27,10 @@ class Map {
         std::pair<unsigned int, unsigned int> get_dimensions();
         unsigned int get_bomb_count();
         unsigned int get_flag_count();
-        Tile ***get_map();
+        Tile ***get_tiles();
+
+        std::pair<unsigned int, unsigned int> get_sanitized_position(std::pair<unsigned int, unsigned int> pos);
+        std::pair<unsigned int, unsigned int> get_sanitized_position(unsigned int x, unsigned int y);
 
         Tile *get_tile_from_position(std::pair<unsigned int, unsigned int> position);
         Tile *get_tile_from_position(unsigned int x, unsigned int y);
@@ -40,6 +43,7 @@ class Map {
         // dimesnions in tiles
         std::pair<unsigned int, unsigned int> dimensions;
 
+        // dimensions of a tile
         std::pair<unsigned int, unsigned int> universal_tile_size;
 
         unsigned int bombs;
