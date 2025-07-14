@@ -1,8 +1,10 @@
 // #include <SDL2/SDL.h>
 #include <iostream>
+#include <string>
 
 #include "GameHandler.hpp"
 
+// Pointer to the main gamehandler.
 GameHandler *gamehandler = new GameHandler;
 
 int main(void) {
@@ -27,20 +29,12 @@ int main(void) {
 
     (gamehandler->get_map())->fill_map(gamehandler->get_renderer());
 
-    Uint32 frame_start;
-    int frame_time;
-
+    // Main gameloop
     while (gamehandler->is_running()) {
-        frame_start = SDL_GetTicks();
-
         gamehandler->event_handler();
         gamehandler->render_logic();
 
-        frame_time = SDL_GetTicks() - frame_start;
-
-        if (gamehandler->get_frame_delay() > frame_time) {
-            SDL_Delay(gamehandler->get_frame_delay() - frame_time);
-        }
+        gamehandler->apply_fps_limit();
     }
 
     delete gamehandler;

@@ -3,7 +3,7 @@
 Tile::Tile() {
     std::cout << "Tile initialised!" << std::endl;
 
-    // set default colors
+    // Set default colors
     this->set_hidden_color(180, 180, 180, 0);
     this->set_exposed_color(128, 128, 128, 0);
 }
@@ -44,6 +44,13 @@ void Tile::set_size(unsigned int width, unsigned int height) {
 
 void Tile::set_flag(bool value) {
     this->has_flag = value;
+
+    if (value == true) {
+        this->switch_to_flag_color();
+    }
+    else {
+        this->switch_to_normal_color();
+    }
 }
 
 bool Tile::is_flagged() {
@@ -66,6 +73,7 @@ bool Tile::is_exposed() {
     return this->has_exposed;
 }
 
+// TODO: These can be simplified to one function each, using an enum or something.
 void Tile::set_hidden_color(SDL_Color color) {
     this->hidden_color = color;
 }
@@ -120,9 +128,9 @@ SDL_Rect Tile::get_tile_rectangle() {
 }
 
 void Tile::draw_tile(SDL_Renderer *renderer) {
+    // Determine the color of the tile
     SDL_Color actual_color = this->get_exposed_color();
 
-    // determine the color
     if (this->is_exposed() == false) {
         actual_color = this->get_hidden_color();
     }

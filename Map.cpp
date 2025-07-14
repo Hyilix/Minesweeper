@@ -12,6 +12,7 @@ Map::~Map() {
 }
 
 void Map::create_empty_map() {
+    // Create an empty map of Tile objects
     this->tiles = new Tile**[this->dimensions.second];
 
     for (int i = 0; i < this->dimensions.second; i++) {
@@ -20,22 +21,26 @@ void Map::create_empty_map() {
 }
 
 void Map::create_empty_map(std::pair<unsigned int, unsigned int> dimensions) {
+    // Create an empty map of Tile objects with specified dimensions
     this->tiles = new Tile**[dimensions.second];
 
     for (int i = 0; i < dimensions.second; i++) {
         this->tiles[i] = new Tile*[dimensions.first];
     }
 
+    // Save the current dimensions
     this->set_dimensions(dimensions);
 }
 
 void Map::create_empty_map(unsigned int width, unsigned int height) {
+    // Create an empty map of Tile objects with specified dimensions
     this->tiles = new Tile**[height];
 
     for (int i = 0; i < height; i++) {
         this->tiles[i] = new Tile*[width];
     }
 
+    // Save the current dimensions
     this->set_dimensions(width, height);
 }
 

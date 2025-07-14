@@ -34,10 +34,11 @@ class GameHandler {
         void set_fps(unsigned int FPS);
         unsigned int get_fps();
 
-        void calculate_frame_delay(); 
-        unsigned int get_frame_delay();
+        void apply_fps_limit();
 
     private:
+        void calculate_frame_delay(); 
+
         bool running = 0;
         SDL_Window *window;
         SDL_Renderer *renderer;

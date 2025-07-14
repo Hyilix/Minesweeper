@@ -3,7 +3,7 @@
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
 
-    // init functions
+    // vvv Init functions vvv
     this->set_fps(255);
     this->calculate_frame_delay();
 }
@@ -11,7 +11,7 @@ GameHandler::GameHandler() {
 GameHandler::~GameHandler() {
     std::cout << "Game Handler Destroyed!" << std::endl;
 
-    // cleanup functions
+    // vvv Cleanup functions vvv
     SDL_Quit();
 }
 
@@ -48,46 +48,50 @@ void GameHandler::event_handler() {
 
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-
-        case SDL_QUIT:
-            this->set_running(false);
-            break;
-
-        case SDL_KEYDOWN:
-            // std::cout << "Scancode is " << event.key.keysym.scancode << std::endl;
-            switch (event.key.keysym.scancode) {
-
-            // ESC key
-            case 41:
+            case SDL_QUIT:
                 this->set_running(false);
                 break;
 
-            case SDL_SCANCODE_W:
-                std::cout << "Key W pressed\n";
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.scancode) {
+                // The ESC key
+                    case 41:
+                        this->set_running(false);
+                        break;
+                }
                 break;
-            }
-            break;
 
-        case SDL_MOUSEBUTTONDOWN:
-            Sint32 mouse_x = event.button.x;
-            Sint32 mouse_y = event.button.y;
+            case SDL_MOUSEBUTTONDOWN:
+                Sint32 mouse_x = event.button.x;
+                Sint32 mouse_y = event.button.y;
 
-            Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
+                Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
-            temp_tile->set_hidden_color(0, 0, 0, 0);
-            break;
+                // test tile manipulation on click
+                if (event.button.button == 1) {
+                    if (temp_tile->is_exposed() == false) {
+                        temp_tile->set_exposed(true);
+                    }
+                }
+                else if (event.button.button == 3) {
+                    if (temp_tile->is_exposed() == false) {
+                        temp_tile->set_flag(!temp_tile->is_flagged());
+                    }
+                }
+                break;
         }
     }
 }
 
 void GameHandler::render_logic() {
-    // clear the screen
+    // Clear the screen
     SDL_SetRenderDrawColor(this->renderer, this->color.r, this->color.g, this->color.b, this->color.a);
     SDL_RenderClear(this->renderer);
 
+    // Render the current map
     (this->get_map())->render_map(this->get_renderer());
 
-    // update the screen
+    // Update the screen
     SDL_RenderPresent(this->renderer);
 }
 
@@ -123,6 +127,7 @@ Map *GameHandler::get_map() {
 
 void GameHandler::set_fps(unsigned int FPS) {
     this->FPS = FPS;
+    this->calculate_frame_delay();
 }
 
 unsigned int GameHandler::get_fps() {
@@ -133,7 +138,13 @@ void GameHandler::calculate_frame_delay() {
     this->frame_delay = 1000 / this->get_fps();
 }
 
-unsigned int GameHandler::get_frame_delay() {
-    return this->frame_delay;
+void GameHandler::apply_fps_limit() {
+    // Limit the gameloop to the set FPS
+    Uint32 frame_start = SDL_GetTicks();
+    int frame_time = SDL_GetTicks() - frame_start;
+
+    if (this->frame_delay > frame_time) {
+        SDL_Delay(this->frame_delay - frame_time);
+    }
 }
 

@@ -50,6 +50,11 @@ class Map {
         unsigned int flags;
 
         Tile ***tiles;
+
+        SDL_Color tile_normal_color = {180, 180, 180, 0};
+        SDL_Color tile_exposed_color = {128, 128, 128, 0};
+        SDL_Color tile_flag_color = {0, 200, 0, 0};
+        SDL_Color tile_bomb_color = {200, 0, 0, 0};
 };
 
 #endif
