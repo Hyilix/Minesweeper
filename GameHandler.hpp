@@ -5,10 +5,20 @@
 
 #include "Map.hpp"
 
+typedef struct {
+    // map number of tiles
+    unsigned int map_x_size;
+    unsigned int map_y_size;
+
+    unsigned int bomb_count;
+} game_settings_t;
+
 class GameHandler {
     public:
         GameHandler();
         ~GameHandler();
+
+        bool game_started = false;
 
         void init(Uint32 flags = SDL_INIT_EVERYTHING);
         void create_window(char *name, int x, int y, int h, int w, Uint32 flags);
@@ -28,7 +38,8 @@ class GameHandler {
 
         void set_running(bool value);
 
-        void create_map();
+        void create_map(game_settings_t *settings);
+        void create_map_debug();
         Map *get_map();
 
         void set_fps(unsigned int FPS);
@@ -39,7 +50,7 @@ class GameHandler {
     private:
         void calculate_frame_delay(); 
 
-        bool running = 0;
+        bool running = false;
         SDL_Window *window;
         SDL_Renderer *renderer;
 
@@ -53,3 +64,4 @@ class GameHandler {
 };
 
 #endif
+

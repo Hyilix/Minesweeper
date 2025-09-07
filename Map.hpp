@@ -1,11 +1,13 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
+#include "Randomiser.h"
 #include "Tile.hpp"
 
 class Map {
     public:
         Map();
+        Map(unsigned int x_size, unsigned int y_size);
         ~Map();
 
         void create_empty_map();
@@ -39,7 +41,11 @@ class Map {
         Tile ***get_tile_neighbors(unsigned int x, unsigned int y);
         Tile ***get_tile_neighbors(Tile *tile);
 
+        Randomiser_2D *get_randomiser();
+
     private:
+        Randomiser_2D *randomiser;
+
         // dimesnions in tiles
         std::pair<unsigned int, unsigned int> dimensions;
 
@@ -58,3 +64,4 @@ class Map {
 };
 
 #endif
+

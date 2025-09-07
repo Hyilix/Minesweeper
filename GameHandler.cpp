@@ -1,4 +1,5 @@
 #include "GameHandler.hpp"
+#include "Randomiser.h"
 
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
@@ -6,6 +7,7 @@ GameHandler::GameHandler() {
     // vvv Init functions vvv
     this->set_fps(255);
     this->calculate_frame_delay();
+
 }
 
 GameHandler::~GameHandler() {
@@ -47,38 +49,46 @@ void GameHandler::event_handler() {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                this->set_running(false);
-                break;
+        if (this->running == true) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    this->set_running(false);
+                    break;
 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.scancode) {
-                // The ESC key
-                    case 41:
-                        this->set_running(false);
-                        break;
-                }
-                break;
-
-            case SDL_MOUSEBUTTONDOWN:
-                Sint32 mouse_x = event.button.x;
-                Sint32 mouse_y = event.button.y;
-
-                Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
-
-                // test tile manipulation on click
-                if (event.button.button == 1) {
-                    if (temp_tile->is_exposed() == false) {
-                        temp_tile->set_exposed(true);
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.scancode) {
+                    // The ESC key
+                        case 41:
+                            this->set_running(false);
+                            break;
                     }
-                }
-                else if (event.button.button == 3) {
-                    if (temp_tile->is_exposed() == false) {
-                        temp_tile->set_flag(!temp_tile->is_flagged());
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    Sint32 mouse_x = event.button.x;
+                    Sint32 mouse_y = event.button.y;
+
+                    Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
+
+                    temp_tile->click_action(event.button.button);
+
+                    if (!this->game_started) {
+                        this->game_started = true;
+
+                        Randomiser_2D *randomiser = this->get_map()->get_randomiser();
+
+                        // Prepare the randomiser
+                        randomiser->set_random_count(20);
+                        randomiser->set_init_position(temp_tile->get_raw_position());
+                        randomiser->set_grace_scale(3);
+                        randomiser->apply_grace_to_grid();
+
+                        randomiser->randomise();
+                        randomiser->DEBUG_print_grid();
+                        randomiser->DEBUG_print_bombs();
                     }
-                }
-                break;
+                    break;
+            }
         }
     }
 }
@@ -111,7 +121,17 @@ SDL_Renderer *GameHandler::get_renderer() {
     return this->renderer;
 }
 
-void GameHandler::create_map() {
+void GameHandler::create_map(game_settings_t *settings) {
+    Map *new_map = new Map(settings->map_x_size, settings->map_y_size);
+
+    new_map->create_empty_map();
+    new_map->set_bomb_count(settings->bomb_count);
+    new_map->set_flag_count(0);
+
+    this->map = new_map;
+}
+
+void GameHandler::create_map_debug() {
     Map *new_map = new Map;
 
     new_map->create_empty_map();

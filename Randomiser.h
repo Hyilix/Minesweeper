@@ -1,0 +1,62 @@
+#ifndef RANDOMISER_H
+#define RANDOMISER_H
+
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
+#include "Custom_Types.h"
+
+#define MAX_ATTEMPTS 10
+
+#define DEBUG_RANDOM_POSITION_PRINT false
+
+// Generate random 2d positions on a grid
+class Randomiser_2D {
+    public:
+        Randomiser_2D(pair_uint dimensions);
+        ~Randomiser_2D();
+
+        // Preparation functions
+        void set_random_count(unsigned int count);
+        void set_init_position(pair_uint position);
+        void set_init_position(unsigned int x_pos, unsigned int y_pos);
+        void set_grace_scale(unsigned int scale);
+
+        // Utils
+        /*
+         * Create a preoccupied zone in the grid of a square shape
+         * of size *grace_scale* with top-left corner *init_position*
+         */
+        void apply_grace_to_grid();
+
+        void randomise();
+
+        vec_2d_bool get_grid();
+
+        std::vector<pair_uint> get_bomb_coordinates();
+
+        // Debug
+        void DEBUG_print_grid();
+        void DEBUG_print_bombs();
+
+    private:
+        vec_2d_bool grid;
+        std::vector<pair_uint> bomb_coordinates;
+
+        pair_uint map_dimensions;
+        unsigned int no_rand;
+
+        pair_uint init_position;
+        unsigned int grace_scale = 3;
+
+        void create_empty_grid();
+        /*
+         * Attempt to fill a random position in the grid with true.
+         * Will return *true* if succesful, or *false* on too many failed attempts
+         */
+        bool fill_random_pos();
+};
+
+#endif
+

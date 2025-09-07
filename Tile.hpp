@@ -14,9 +14,14 @@ class Tile {
         Tile();
         ~Tile();
 
-        void click_action();
+        // Basic tile actions
+        void set_exposed_tile();
+        void set_flag_tile();
+
+        void click_action(Uint8 button);
 
         std::pair<unsigned int, unsigned int> get_position();
+        std::pair<unsigned int, unsigned int> get_raw_position();
         std::pair<unsigned int, unsigned int> get_size();
 
         void set_position(std::pair<unsigned int, unsigned int> position);
@@ -69,3 +74,4 @@ class Tile {
 };
 
 #endif
+

@@ -1,6 +1,6 @@
 CC = g++
 FLAGS = -lSDL2
-OBJECTS = main.o GameHandler.o Tile.o Map.o
+OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
 TARGET = Minesweeper
 
 .PHONY: build run clean
@@ -19,8 +19,11 @@ GameHandler.o: GameHandler.cpp GameHandler.hpp Map.hpp
 Tile.o: Tile.cpp Tile.hpp
 	$(CC) $(FLAGS) -c Tile.cpp
 
-Map.o: Map.cpp Map.hpp Tile.hpp
+Map.o: Map.cpp Map.hpp Tile.hpp Randomiser.h
 	$(CC) $(FLAGS) -c Map.cpp
+
+Randomiser.o: Randomiser.cpp Randomiser.h Custom_Types.h
+	$(CC) $(FLAGS) -c Randomiser.cpp
 
 clean:
 	rm -rf ./$(TARGET) *.o

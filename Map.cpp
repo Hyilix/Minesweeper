@@ -1,10 +1,29 @@
 #include "Map.hpp"
+#include "Custom_Types.h"
+#include "Randomiser.h"
 
 Map::Map() {
     std::cout << "Map initialised!" << std::endl;
 
+    unsigned int default_x_size = 5;
+    unsigned int default_y_size = 10;
+
     this->set_universal_tile_size(50, 50);
-    this->set_dimensions(5, 10);
+    this->set_dimensions(default_x_size, default_y_size);
+
+    pair_uint temp_pair(default_x_size, default_y_size);
+    this->randomiser = new Randomiser_2D(temp_pair);
+}
+
+Map::Map(unsigned int x_size, unsigned int y_size) {
+    std::cout << "Map initialised with dimensions: " << std::endl;
+    std::cout << x_size << " " << y_size << std::endl;
+
+    this->set_universal_tile_size(50, 50);
+    this->set_dimensions(x_size, y_size);
+
+    pair_uint temp_pair(x_size, y_size);
+    this->randomiser = new Randomiser_2D(temp_pair);
 }
 
 Map::~Map() {
@@ -178,5 +197,9 @@ Tile ***Map::get_tile_neighbors(unsigned int x, unsigned int y) {
 
 Tile ***Map::get_tile_neighbors(Tile *tile) {
     // TODO
+}
+
+Randomiser_2D *Map::get_randomiser() {
+    return this->randomiser;
 }
 

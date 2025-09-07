@@ -12,12 +12,43 @@ Tile::~Tile() {
     std::cout << "Tile Destroyed!" << std::endl;
 }
 
-void Tile::click_action() {
-    // TODO
+void Tile::set_exposed_tile() {
+    bool is_exposed = this->is_exposed();
+    bool is_flagged = this->is_flagged();
+
+    if (is_exposed == false && is_flagged == false) {
+        this->set_exposed(true);
+    }
+}
+
+void Tile::set_flag_tile() {
+    bool is_exposed = this->is_exposed();
+    bool is_flagged = this->is_flagged();
+
+    if (is_exposed == false) {
+        this->set_flag(!is_flagged);
+    }
+}
+
+void Tile::click_action(Uint8 button) {
+    if (button == 1) {
+        this->set_exposed_tile();
+    }
+    else if (button == 3) {
+        this->set_flag_tile();
+    }
 }
 
 std::pair<unsigned int, unsigned int> Tile::get_position() {
     return this->position;
+}
+
+std::pair<unsigned int, unsigned int> Tile::get_raw_position() {
+    unsigned int raw_x = this->position.first / this->size.first;
+    unsigned int raw_y = this->position.second / this->size.second;
+    std::pair<unsigned int, unsigned int> raw_pos(raw_x, raw_y);
+
+    return raw_pos;
 }
 
 std::pair<unsigned int, unsigned int> Tile::get_size() {
@@ -113,7 +144,7 @@ void Tile::switch_to_flag_color() {
 }
 
 void Tile::switch_to_normal_color() {
-    this->set_hidden_color(255, 255, 255, 0);
+    this->set_hidden_color(180, 180, 180, 0);
 }
 
 void Tile::create_tile_rectangle() {
