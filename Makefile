@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -lSDL2
+FLAGS = -lSDL2 -lSDL2_ttf
 OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
 TARGET = Minesweeper
 

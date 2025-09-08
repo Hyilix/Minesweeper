@@ -6,6 +6,8 @@
 #include <utility>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #define TILE_DEFAULT_SIZE 50
 

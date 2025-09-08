@@ -1,5 +1,7 @@
 #include "Tile.hpp"
 #include "Custom_Types.h"
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
 
 Tile::Tile() {
     // std::cout << "Tile initialised!" << std::endl;
@@ -193,5 +195,34 @@ void Tile::draw_tile(SDL_Renderer *renderer) {
 
     SDL_RenderFillRect(renderer, &this->tile_rect);
     SDL_RenderDrawRect(renderer, &this->tile_rect);
+
+    if (this->is_exposed() == true) {
+        if (this->tile_number > 0) {
+            // std::cout << "Print number" << std::endl;
+            TTF_Init();
+            TTF_Font *font = TTF_OpenFont("arialbd.ttf", 24);
+
+            SDL_Surface *text;
+            SDL_Color color = {0, 0, 0};
+
+            std::string num = std::to_string(this->tile_number);
+
+            text = TTF_RenderText_Solid(font, num.c_str(), color);
+
+            SDL_Texture *text_texture = SDL_CreateTextureFromSurface(renderer, text);
+
+            pair_uint temp_pos = this->get_position();
+
+            SDL_Rect dest = {
+                (int)temp_pos.first,
+                (int)temp_pos.second,
+                text->w,
+                text->h
+            };
+
+            SDL_RenderCopy(renderer, text_texture, NULL, &dest);
+            // SDL_DestroyTexture(text_texture);
+        }
+    }
 }
 
