@@ -1,4 +1,5 @@
 #include "Tile.hpp"
+#include "Custom_Types.h"
 
 Tile::Tile() {
     std::cout << "Tile initialised!" << std::endl;
@@ -6,6 +7,7 @@ Tile::Tile() {
     // Set default colors
     this->set_hidden_color(180, 180, 180, 0);
     this->set_exposed_color(128, 128, 128, 0);
+    this->set_tile_number(0);
 }
 
 Tile::~Tile() {
@@ -30,11 +32,23 @@ void Tile::set_flag_tile() {
     }
 }
 
+void Tile::set_tile_number(int number) {
+    this->tile_number = number;
+}
+
+void Tile::increment_tile_number(int number) {
+    this->tile_number += number;
+}
+
+int Tile::get_tile_number() {
+    return this->tile_number;
+}
+
 void Tile::click_action(Uint8 button) {
-    if (button == 1) {
+    if (button == LEFT_CLICK) {
         this->set_exposed_tile();
     }
-    else if (button == 3) {
+    else if (button == RIGHT_CLICK) {
         this->set_flag_tile();
     }
 }
@@ -93,6 +107,7 @@ void Tile::set_bomb(bool value) {
 
     if (value == true) {
         this->switch_to_bomb_color();
+        this->tile_number = 9;
     }
 }
 

@@ -18,6 +18,10 @@ class Tile {
         void set_exposed_tile();
         void set_flag_tile();
 
+        void set_tile_number(int number);
+        void increment_tile_number(int number = 1);
+        int get_tile_number();
+
         void click_action(Uint8 button);
 
         std::pair<unsigned int, unsigned int> get_position();
@@ -61,7 +65,7 @@ class Tile {
         std::pair<unsigned int, unsigned int> size;
 
         // the number of bombs near this tile. 
-        uint8_t tile_number = 0;
+        int tile_number = 0;
         bool has_exposed = false;
 
         bool has_flag = false;

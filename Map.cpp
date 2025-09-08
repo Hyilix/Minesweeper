@@ -187,16 +187,60 @@ Tile *Map::get_tile_from_position(unsigned int x, unsigned int y) {
     return this->get_tiles()[y_sanitized][x_sanitized];
 }
 
-Tile ***Map::get_tile_neighbors(std::pair<unsigned int, unsigned int> position) {
-    // TODO
+Tile ***__make_empty_neighbor_map() {
+    Tile ***neighbors = new Tile**[3];
+
+    for (unsigned int i = 0; i < 3; i++) {
+        neighbors[i] = new Tile*[3];
+    }
+    return neighbors;
 }
 
-Tile ***Map::get_tile_neighbors(unsigned int x, unsigned int y) {
-    // TODO
+Tile ***Map::get_tile_neighbors(std::pair<unsigned int, unsigned int> position) {
+    Tile ***neighbors = __make_empty_neighbor_map();
+
+    for (unsigned int y = 0; y < 3; y++) {
+        for (unsigned int x = 0; x < 3; x++) {
+            neighbors[y][x] = this->tiles[position.second + y - 1][position.first + x - 1];
+        }
+    }
+    return neighbors;
+}
+
+Tile ***Map::get_tile_neighbors(unsigned int x_pos, unsigned int y_pos) {
+    Tile ***neighbors = __make_empty_neighbor_map();
+
+    for (unsigned int y = 0; y < 3; y++) {
+        for (unsigned int x = 0; x < 3; x++) {
+            neighbors[y][x] = this->tiles[y_pos + y - 1][x_pos + x - 1];
+        }
+    }
+    return neighbors;
 }
 
 Tile ***Map::get_tile_neighbors(Tile *tile) {
-    // TODO
+    auto position = tile->get_raw_position();
+    Tile ***neighbors = __make_empty_neighbor_map();
+
+    for (unsigned int y = 0; y < 3; y++) {
+        for (unsigned int x = 0; x < 3; x++) {
+            int temp_pos_x = int(position.second) + int(y) - 1;
+            int temp_pos_y = int(position.first) + int(x) - 1;
+
+            std::cout << "NEIGHBOR POSITION: " << temp_pos_x << " " << temp_pos_y << std::endl;
+
+            // Out of bounds check
+            if (temp_pos_x < 0 || temp_pos_x >= this->dimensions.first ||
+                temp_pos_y < 0 || temp_pos_y >= this->dimensions.second) {
+                // std::cout << "OUT OF BOUNDS" << std::endl;
+                continue;
+            }
+
+            neighbors[y][x] = this->tiles[temp_pos_y][temp_pos_x];
+            // std::cout << "PREV :" << this->tiles[temp_pos_y][temp_pos_x]->get_tile_number() << std::endl;
+        }
+    }
+    return neighbors;
 }
 
 Randomiser_2D *Map::get_randomiser() {
@@ -209,7 +253,31 @@ void Map::set_bombs(std::vector<pair_uint> bombs) {
     for (unsigned int i = 0; i < bombs_size; i++) {
         auto current_bomb = bombs[i];
         this->tiles[current_bomb.second][current_bomb.first]->set_bomb(true);
-        this->tiles[current_bomb.second][current_bomb.first]->set_exposed_tile();
+
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                // Skip the tile itself
+                if (x == 0 && y == 0) {
+                    continue;
+                }
+
+                int temp_y_pos = int(current_bomb.second + y);
+                int temp_x_pos = int(current_bomb.first + x);
+                pair_uint temp_pos(temp_x_pos, temp_y_pos);
+
+                // Out of bounds check
+                if (temp_y_pos < 0 || temp_y_pos >= this->dimensions.second ||
+                    temp_x_pos < 0 || temp_x_pos >= this->dimensions.first) {
+                        std::cout << "BOMB OUT OF BOUNDS" << std::endl;
+                        continue;
+                }
+
+                if (std::find(bombs.begin(), bombs.end(), temp_pos) == bombs.end()) {
+                    this->tiles[temp_y_pos][temp_x_pos]->increment_tile_number();
+                }
+            }
+        }
+        // this->tiles[current_bomb.second][current_bomb.first]->set_exposed_tile();
     }
 }
 
@@ -218,7 +286,52 @@ void Map::open_tiles(std::vector<pair_uint> tiles) {
 
     for (unsigned int i = 0; i < tiles_size; i++) {
         auto current_tile = tiles[i];
-        this->tiles[current_tile.second][current_tile.first]->set_exposed(true);
+        Tile *temp_tile = this->tiles[current_tile.second][current_tile.first];
+        this->tile_action(temp_tile, LEFT_CLICK);
+        // this->tiles[current_tile.second][current_tile.first]->click_action(LEFT_CLICK);
+    }
+}
+
+void Map::tile_action(Tile *tile, uint8_t button) {
+    tile->click_action(button);
+
+    unsigned int y_pos = tile->get_raw_position().second;
+    unsigned int x_pos = tile->get_raw_position().first;
+
+    if (button == LEFT_CLICK && tile->get_tile_number() == 0) {
+        for (unsigned int y = 0; y < 3; y++) {
+            for (unsigned int x = 0; x < 3; x++) {
+                int temp_y_pos = int(y_pos + y) - 1;
+                int temp_x_pos = int(x_pos + x) - 1;
+
+                // std::cout << "NEIGHBOR POSITION: " << temp_x_pos << " " << temp_y_pos << std::endl;
+                // Out of bounds check
+                if (temp_y_pos < 0 || temp_y_pos >= this->dimensions.second ||
+                    temp_x_pos < 0 || temp_x_pos >= this->dimensions.first) {
+                        // std::cout << "OUT OF BOUNDS" << std::endl;
+                        continue;
+                }
+
+                Tile *temp_tile = this->tiles[temp_y_pos][temp_x_pos];
+
+                // std::cout << "Tile Number: " << temp_tile->get_tile_number() << std::endl;
+                if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
+                    this->tile_action(temp_tile, button);
+                }
+            }
+        }
+    }
+}
+
+void Map::DEBUG_print_tile_numbers() {
+    unsigned int map_size_x = this->dimensions.first;
+    unsigned int map_size_y = this->dimensions.second;
+
+    for (unsigned int y = 0; y < map_size_y; y++) {
+        for (unsigned int x = 0; x < map_size_x; x++) {
+            std::cout << this->tiles[y][x]->get_tile_number() << " ";
+        }
+    std::cout << std::endl;
     }
 }
 

@@ -49,6 +49,8 @@ SDL_Color GameHandler::get_background_color() {
 void GameHandler::event_handler() {
     SDL_Event event;
 
+    Map *map = this->map;
+
     while (SDL_PollEvent(&event)) {
         if (this->running == true) {
             switch (event.type) {
@@ -73,7 +75,8 @@ void GameHandler::event_handler() {
                     Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
                     if (this->game_started) {
-                        temp_tile->click_action(event.button.button);
+                        // temp_tile->click_action(event.button.button);
+                        map->tile_action(temp_tile, event.button.button);
                     }
                     else {
                         this->game_started = true;
@@ -81,7 +84,7 @@ void GameHandler::event_handler() {
                         Randomiser_2D *randomiser = this->get_map()->get_randomiser();
 
                         // Prepare the randomiser
-                        randomiser->set_random_count(20);
+                        randomiser->set_random_count(40);
                         randomiser->set_init_position(temp_tile->get_raw_position());
                         randomiser->apply_grace_to_grid();
 
@@ -94,10 +97,12 @@ void GameHandler::event_handler() {
                         this->get_map()->open_tiles(tiles);
 
                         // DEBUG PRINT
-                        randomiser->DEBUG_print_grid();
-                        randomiser->DEBUG_print_bombs();
+                        // randomiser->DEBUG_print_grid();
+                        // randomiser->DEBUG_print_bombs();
 
                         delete randomiser;
+
+                        map->DEBUG_print_tile_numbers();
                     }
                     break;
             }

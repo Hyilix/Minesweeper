@@ -4,6 +4,11 @@
 #include <utility>
 #include <vector>
 
+enum MouseKeys {
+    LEFT_CLICK = 1,
+    RIGHT_CLICK = 3,
+};
+
 /* vvv Custom Types vvv */
 
 typedef std::pair<unsigned int, unsigned int> pair_uint;
