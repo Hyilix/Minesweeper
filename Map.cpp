@@ -268,7 +268,6 @@ void Map::set_bombs(std::vector<pair_uint> bombs) {
                 // Out of bounds check
                 if (temp_y_pos < 0 || temp_y_pos >= this->dimensions.second ||
                     temp_x_pos < 0 || temp_x_pos >= this->dimensions.first) {
-                        std::cout << "BOMB OUT OF BOUNDS" << std::endl;
                         continue;
                 }
 

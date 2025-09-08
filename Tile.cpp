@@ -2,7 +2,7 @@
 #include "Custom_Types.h"
 
 Tile::Tile() {
-    std::cout << "Tile initialised!" << std::endl;
+    // std::cout << "Tile initialised!" << std::endl;
 
     // Set default colors
     this->set_hidden_color(180, 180, 180, 0);
