@@ -1,6 +1,7 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
+#include "Custom_Types.h"
 #include "Randomiser.h"
 #include "Tile.hpp"
 
@@ -42,6 +43,9 @@ class Map {
         Tile ***get_tile_neighbors(Tile *tile);
 
         Randomiser_2D *get_randomiser();
+
+        void set_bombs(std::vector<pair_uint> bombs);
+        void open_tiles(std::vector<pair_uint> tiles);
 
     private:
         Randomiser_2D *randomiser;

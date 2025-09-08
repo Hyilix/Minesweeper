@@ -90,6 +90,10 @@ bool Tile::is_flagged() {
 
 void Tile::set_bomb(bool value) {
     this->has_bomb = value;
+
+    if (value == true) {
+        this->switch_to_bomb_color();
+    }
 }
 
 bool Tile::is_bomb() {

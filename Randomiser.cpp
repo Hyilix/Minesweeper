@@ -6,6 +6,9 @@ Randomiser_2D::Randomiser_2D(pair_uint dimensions) {
 
     this->map_dimensions = dimensions;
     this->create_empty_grid();
+
+    pair_uint default_position(0, 0);
+    this->init_position = default_position;
     this->set_random_count(1);
 }
 
@@ -36,7 +39,15 @@ void Randomiser_2D::randomise() {
 }
 
 vec_2d_bool Randomiser_2D::get_grid() {
-    return grid;
+    return this->grid;
+}
+
+std::vector<pair_uint> Randomiser_2D::get_bomb_coordinates() {
+    return this->bomb_coordinates;
+}
+
+std::vector<pair_uint> Randomiser_2D::get_grace_coordinates() {
+    return this->grace_coordinates;
 }
 
 void Randomiser_2D::create_empty_grid() {
@@ -69,8 +80,8 @@ void Randomiser_2D::apply_grace_to_grid() {
             // std::cout << "GRACE: " << y << " " << x << std::endl;
             this->grid[y][x] = true;
 
-            // pair_uint temp_coords(y, x);
-            // this->bomb_coordinates.emplace_back(temp_coords);
+            pair_uint temp_coords(x, y);
+            this->grace_coordinates.emplace_back(temp_coords);
         }
     }
 }
@@ -95,7 +106,7 @@ bool Randomiser_2D::fill_random_pos() {
         if (this->grid[y_rand_pos][x_rand_pos] == false) {
             this->grid[y_rand_pos][x_rand_pos] = true;
 
-            pair_uint temp_coords(y_rand_pos, x_rand_pos);
+            pair_uint temp_coords(x_rand_pos, y_rand_pos);
             this->bomb_coordinates.emplace_back(temp_coords);
 
             attempt_random_generation = false;

@@ -203,3 +203,22 @@ Randomiser_2D *Map::get_randomiser() {
     return this->randomiser;
 }
 
+void Map::set_bombs(std::vector<pair_uint> bombs) {
+    auto bombs_size = bombs.size();
+
+    for (unsigned int i = 0; i < bombs_size; i++) {
+        auto current_bomb = bombs[i];
+        this->tiles[current_bomb.second][current_bomb.first]->set_bomb(true);
+        this->tiles[current_bomb.second][current_bomb.first]->set_exposed_tile();
+    }
+}
+
+void Map::open_tiles(std::vector<pair_uint> tiles) {
+    auto tiles_size = tiles.size();
+
+    for (unsigned int i = 0; i < tiles_size; i++) {
+        auto current_tile = tiles[i];
+        this->tiles[current_tile.second][current_tile.first]->set_exposed(true);
+    }
+}
+

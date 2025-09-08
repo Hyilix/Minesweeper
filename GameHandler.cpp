@@ -1,4 +1,5 @@
 #include "GameHandler.hpp"
+#include "Custom_Types.h"
 #include "Randomiser.h"
 
 GameHandler::GameHandler() {
@@ -65,14 +66,16 @@ void GameHandler::event_handler() {
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
+                    // Raw mouse coordinates
                     Sint32 mouse_x = event.button.x;
                     Sint32 mouse_y = event.button.y;
 
                     Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
-                    temp_tile->click_action(event.button.button);
-
-                    if (!this->game_started) {
+                    if (this->game_started) {
+                        temp_tile->click_action(event.button.button);
+                    }
+                    else {
                         this->game_started = true;
 
                         Randomiser_2D *randomiser = this->get_map()->get_randomiser();
@@ -80,12 +83,21 @@ void GameHandler::event_handler() {
                         // Prepare the randomiser
                         randomiser->set_random_count(20);
                         randomiser->set_init_position(temp_tile->get_raw_position());
-                        randomiser->set_grace_scale(3);
                         randomiser->apply_grace_to_grid();
 
                         randomiser->randomise();
+
+                        std::vector<pair_uint> bombs = randomiser->get_bomb_coordinates();
+                        this->get_map()->set_bombs(bombs);
+
+                        std::vector<pair_uint> tiles = randomiser->get_grace_coordinates();
+                        this->get_map()->open_tiles(tiles);
+
+                        // DEBUG PRINT
                         randomiser->DEBUG_print_grid();
                         randomiser->DEBUG_print_bombs();
+
+                        delete randomiser;
                     }
                     break;
             }
@@ -127,6 +139,8 @@ void GameHandler::create_map(game_settings_t *settings) {
     new_map->create_empty_map();
     new_map->set_bomb_count(settings->bomb_count);
     new_map->set_flag_count(0);
+
+    new_map->get_randomiser()->set_random_count(settings->bomb_count);
 
     this->map = new_map;
 }
