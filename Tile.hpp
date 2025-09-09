@@ -60,7 +60,7 @@ class Tile {
         void create_tile_rectangle();
         SDL_Rect get_tile_rectangle();
 
-        void draw_tile(SDL_Renderer *renderer);
+        void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL);
 
     private:
         std::pair<unsigned int, unsigned int> position;

@@ -8,7 +8,8 @@ GameHandler::GameHandler() {
     // vvv Init functions vvv
     this->set_fps(255);
     this->calculate_frame_delay();
-
+    TTF_Init();
+    this->font = TTF_OpenFont("arialbd.ttf", 24);
 }
 
 GameHandler::~GameHandler() {
@@ -64,6 +65,9 @@ void GameHandler::event_handler() {
                         case 41:
                             this->set_running(false);
                             break;
+
+                        default:
+                            break;
                     }
                     break;
 
@@ -99,10 +103,9 @@ void GameHandler::event_handler() {
                         // DEBUG PRINT
                         // randomiser->DEBUG_print_grid();
                         // randomiser->DEBUG_print_bombs();
+                        // map->DEBUG_print_tile_numbers();
 
                         delete randomiser;
-
-                        map->DEBUG_print_tile_numbers();
                     }
                     break;
             }
@@ -116,7 +119,7 @@ void GameHandler::render_logic() {
     SDL_RenderClear(this->renderer);
 
     // Render the current map
-    (this->get_map())->render_map(this->get_renderer());
+    (this->get_map())->render_map(this->get_renderer(), this->font);
 
     // Update the screen
     SDL_RenderPresent(this->renderer);

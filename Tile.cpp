@@ -179,7 +179,7 @@ SDL_Rect Tile::get_tile_rectangle() {
     return this->tile_rect;
 }
 
-void Tile::draw_tile(SDL_Renderer *renderer) {
+void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font) {
     // Determine the color of the tile
     SDL_Color actual_color = this->get_exposed_color();
 
@@ -196,11 +196,11 @@ void Tile::draw_tile(SDL_Renderer *renderer) {
     SDL_RenderFillRect(renderer, &this->tile_rect);
     SDL_RenderDrawRect(renderer, &this->tile_rect);
 
+    // Draw tile text
     if (this->is_exposed() == true) {
         if (this->tile_number > 0) {
             // std::cout << "Print number" << std::endl;
-            TTF_Init();
-            TTF_Font *font = TTF_OpenFont("arialbd.ttf", 24);
+            // TTF_Font *font = TTF_OpenFont("arialbd.ttf", 24);
 
             SDL_Surface *text;
             SDL_Color color = {0, 0, 0};
@@ -214,14 +214,14 @@ void Tile::draw_tile(SDL_Renderer *renderer) {
             pair_uint temp_pos = this->get_position();
 
             SDL_Rect dest = {
-                (int)temp_pos.first,
-                (int)temp_pos.second,
+                (int)temp_pos.first + (int)this->size.first / 4,
+                (int)temp_pos.second + (int)this->size.second / 4,
                 text->w,
                 text->h
             };
 
             SDL_RenderCopy(renderer, text_texture, NULL, &dest);
-            // SDL_DestroyTexture(text_texture);
+            SDL_DestroyTexture(text_texture);
         }
     }
 }

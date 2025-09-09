@@ -61,6 +61,8 @@ class GameHandler {
 
         unsigned int FPS;
         unsigned int frame_delay;
+
+        TTF_Font *font;
 };
 
 #endif

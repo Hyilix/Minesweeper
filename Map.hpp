@@ -27,7 +27,7 @@ class Map {
         std::pair<unsigned int, unsigned int> get_universal_tile_size();
 
         void fill_map(SDL_Renderer *renderer);
-        void render_map(SDL_Renderer *renderer);
+        void render_map(SDL_Renderer *renderer, TTF_Font *font);
 
         std::pair<unsigned int, unsigned int> get_dimensions();
         unsigned int get_bomb_count();

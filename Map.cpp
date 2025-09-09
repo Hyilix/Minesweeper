@@ -115,7 +115,7 @@ void Map::fill_map(SDL_Renderer *renderer) {
     }
 }
 
-void Map::render_map(SDL_Renderer *renderer) {
+void Map::render_map(SDL_Renderer *renderer, TTF_Font *font) {
     unsigned int x_pos = this->get_dimensions().first;
     unsigned int y_pos = this->get_dimensions().second;
 
@@ -124,7 +124,7 @@ void Map::render_map(SDL_Renderer *renderer) {
 
     for (unsigned int y = 0; y < y_pos; y++) {
         for (unsigned int x = 0; x < x_pos; x++) {
-            (this->get_tiles()[y][x])->draw_tile(renderer);
+            (this->get_tiles()[y][x])->draw_tile(renderer, font);
         }
     }
 }
