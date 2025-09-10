@@ -197,6 +197,8 @@ void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font) {
     SDL_RenderDrawRect(renderer, &this->tile_rect);
 
     // Draw tile text
+    // TODO: Creating the text each time is expensive and prone to extensive memory usage.
+    // TODO: Create the text for each tile only once, and only render it after
     if (this->is_exposed() == true) {
         if (this->tile_number > 0 && !this->is_bomb() && !this->is_flagged()) {
             // std::cout << "Print number" << std::endl;
