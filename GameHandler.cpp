@@ -8,6 +8,8 @@ GameHandler::GameHandler() {
     // vvv Init functions vvv
     this->set_fps(255);
     this->calculate_frame_delay();
+
+    // Font prearations
     TTF_Init();
     this->font = TTF_OpenFont("arialbd.ttf", 24);
 }
@@ -17,6 +19,7 @@ GameHandler::~GameHandler() {
 
     // vvv Cleanup functions vvv
     SDL_Quit();
+    TTF_Quit();
 }
 
 void GameHandler::init(Uint32 flags) {

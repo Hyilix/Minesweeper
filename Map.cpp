@@ -1,6 +1,13 @@
 #include "Map.hpp"
-#include "Custom_Types.h"
-#include "Randomiser.h"
+
+Tile ***__make_empty_neighbor_map() {
+    Tile ***neighbors = new Tile**[3];
+
+    for (unsigned int i = 0; i < 3; i++) {
+        neighbors[i] = new Tile*[3];
+    }
+    return neighbors;
+}
 
 Map::Map() {
     std::cout << "Map initialised!" << std::endl;
@@ -187,59 +194,26 @@ Tile *Map::get_tile_from_position(unsigned int x, unsigned int y) {
     return this->get_tiles()[y_sanitized][x_sanitized];
 }
 
-Tile ***__make_empty_neighbor_map() {
-    Tile ***neighbors = new Tile**[3];
-
-    for (unsigned int i = 0; i < 3; i++) {
-        neighbors[i] = new Tile*[3];
-    }
-    return neighbors;
-}
-
 Tile ***Map::get_tile_neighbors(std::pair<unsigned int, unsigned int> position) {
     Tile ***neighbors = __make_empty_neighbor_map();
+    this->fill_matrix_with_neighbors(neighbors, position);
 
-    for (unsigned int y = 0; y < 3; y++) {
-        for (unsigned int x = 0; x < 3; x++) {
-            neighbors[y][x] = this->tiles[position.second + y - 1][position.first + x - 1];
-        }
-    }
     return neighbors;
 }
 
 Tile ***Map::get_tile_neighbors(unsigned int x_pos, unsigned int y_pos) {
     Tile ***neighbors = __make_empty_neighbor_map();
+    pair_uint position(x_pos, y_pos);
+    this->fill_matrix_with_neighbors(neighbors, position);
 
-    for (unsigned int y = 0; y < 3; y++) {
-        for (unsigned int x = 0; x < 3; x++) {
-            neighbors[y][x] = this->tiles[y_pos + y - 1][x_pos + x - 1];
-        }
-    }
     return neighbors;
 }
 
 Tile ***Map::get_tile_neighbors(Tile *tile) {
     auto position = tile->get_raw_position();
     Tile ***neighbors = __make_empty_neighbor_map();
+    this->fill_matrix_with_neighbors(neighbors, position);
 
-    for (unsigned int y = 0; y < 3; y++) {
-        for (unsigned int x = 0; x < 3; x++) {
-            int temp_pos_x = int(position.second) + int(y) - 1;
-            int temp_pos_y = int(position.first) + int(x) - 1;
-
-            std::cout << "NEIGHBOR POSITION: " << temp_pos_x << " " << temp_pos_y << std::endl;
-
-            // Out of bounds check
-            if (temp_pos_x < 0 || temp_pos_x >= this->dimensions.first ||
-                temp_pos_y < 0 || temp_pos_y >= this->dimensions.second) {
-                // std::cout << "OUT OF BOUNDS" << std::endl;
-                continue;
-            }
-
-            neighbors[y][x] = this->tiles[temp_pos_y][temp_pos_x];
-            // std::cout << "PREV :" << this->tiles[temp_pos_y][temp_pos_x]->get_tile_number() << std::endl;
-        }
-    }
     return neighbors;
 }
 
@@ -297,29 +271,92 @@ void Map::tile_action(Tile *tile, uint8_t button) {
     unsigned int y_pos = tile->get_raw_position().second;
     unsigned int x_pos = tile->get_raw_position().first;
 
-    if (button == LEFT_CLICK && tile->get_tile_number() == 0) {
-        for (unsigned int y = 0; y < 3; y++) {
-            for (unsigned int x = 0; x < 3; x++) {
-                int temp_y_pos = int(y_pos + y) - 1;
-                int temp_x_pos = int(x_pos + x) - 1;
+    Tile ***neighbors = this->get_tile_neighbors(tile);
 
-                // std::cout << "NEIGHBOR POSITION: " << temp_x_pos << " " << temp_y_pos << std::endl;
-                // Out of bounds check
-                if (temp_y_pos < 0 || temp_y_pos >= this->dimensions.second ||
-                    temp_x_pos < 0 || temp_x_pos >= this->dimensions.first) {
-                        // std::cout << "OUT OF BOUNDS" << std::endl;
+    if (button == LEFT_CLICK) {
+        // Reveal all bordering tiles with no bombs around them
+        // unill reaching a numbered tile
+        if (tile->get_tile_number() == 0) {
+            for (unsigned int y = 0; y < 3; y++) {
+                for (unsigned int x = 0; x < 3; x++) {
+                    Tile *temp_tile = neighbors[y][x];
+
+                    if (temp_tile == NULL) {
                         continue;
+                    }
+
+                    if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
+                        this->tile_action(temp_tile, button);
+                    }
                 }
+            }
+        }
+        // Fast click on an exposed tile with flags around it
+        // to reveal all neighbors
+        else if (tile->is_exposed()) {
+            unsigned int flag_count = this->get_flags_around_tile(neighbors);
 
-                Tile *temp_tile = this->tiles[temp_y_pos][temp_x_pos];
+            if (flag_count == tile->get_tile_number()) {
+                for (unsigned int y = 0; y < 3; y++) {
+                    for (unsigned int x = 0; x < 3; x++) {
+                        Tile *temp_tile = neighbors[y][x];
 
-                // std::cout << "Tile Number: " << temp_tile->get_tile_number() << std::endl;
-                if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                    this->tile_action(temp_tile, button);
+                        if (temp_tile == NULL) {
+                            continue;
+                        }
+
+                        if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
+                            this->tile_action(temp_tile, button);
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+void Map::fill_matrix_with_neighbors(Tile ***matrix, pair_uint tile_position) {
+    for (unsigned int y = 0; y < 3; y++) {
+        for (unsigned int x = 0; x < 3; x++) {
+            int temp_pos_y = int(tile_position.second + y) - 1;
+            int temp_pos_x = int(tile_position.first + x) - 1;
+
+            // Out of bounds check
+            if (temp_pos_x < 0 || temp_pos_x >= this->dimensions.first ||
+                temp_pos_y < 0 || temp_pos_y >= this->dimensions.second) {
+                    matrix[y][x] = NULL;
+                    continue;
+            }
+
+            matrix[y][x] = this->tiles[temp_pos_y][temp_pos_x];
+        }
+    }
+}
+
+unsigned int Map::get_flags_around_tile(Tile ***neighbors) {
+    unsigned int flag_count = 0;
+    Tile *central_tile = neighbors[1][1];
+
+    // Tile does not exist
+    if (!central_tile) {
+        return 0;
+    }
+
+    for (unsigned int y = 0; y < 3; y++) {
+        for (unsigned int x = 0; x < 3; x++) {
+            Tile *temp_tile = neighbors[y][x];
+
+            // Skip central tile and non_existing tiles
+            if ((x == 1 && y == 1) || temp_tile == NULL) {
+                continue;
+            }
+
+            if (temp_tile->is_flagged()) {
+                flag_count++;
+            }
+        }
+    }
+    return flag_count;
 }
 
 void Map::DEBUG_print_tile_numbers() {

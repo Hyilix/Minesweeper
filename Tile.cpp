@@ -198,7 +198,7 @@ void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font) {
 
     // Draw tile text
     if (this->is_exposed() == true) {
-        if (this->tile_number > 0) {
+        if (this->tile_number > 0 && !this->is_bomb() && !this->is_flagged()) {
             // std::cout << "Print number" << std::endl;
             // TTF_Font *font = TTF_OpenFont("arialbd.ttf", 24);
 

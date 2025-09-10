@@ -56,6 +56,9 @@ class Map {
     private:
         Randomiser_2D *randomiser;
 
+        void fill_matrix_with_neighbors(Tile ***matrix, pair_uint tile_position);
+        unsigned int get_flags_around_tile(Tile ***neighbors);
+
         // dimesnions in tiles
         std::pair<unsigned int, unsigned int> dimensions;
 
