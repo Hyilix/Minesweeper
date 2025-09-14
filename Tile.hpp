@@ -62,7 +62,13 @@ class Tile {
 
         void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL);
 
+        void prep_text_rendering(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
+
     private:
+        void set_text(SDL_Color color, TTF_Font *font);
+        void set_text_texture(SDL_Renderer *renderer);
+        void set_text_dest();
+
         std::pair<unsigned int, unsigned int> position;
         std::pair<unsigned int, unsigned int> size;
 
@@ -77,6 +83,10 @@ class Tile {
         SDL_Color exposed_color;
 
         SDL_Rect tile_rect;
+
+        SDL_Surface *text;
+        SDL_Texture *text_texture;
+        SDL_Rect dest;
 };
 
 #endif

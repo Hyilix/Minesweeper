@@ -62,6 +62,7 @@ class GameHandler {
         unsigned int FPS;
         unsigned int frame_delay;
 
+        SDL_Color tile_text_color = {0, 0, 0};
         TTF_Font *font;
 };
 

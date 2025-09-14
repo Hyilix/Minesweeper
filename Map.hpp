@@ -51,6 +51,8 @@ class Map {
 
         void tile_action(Tile *tile, uint8_t button);
 
+        void prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
+
         void DEBUG_print_tile_numbers();
 
     private:

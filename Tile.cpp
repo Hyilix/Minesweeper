@@ -197,34 +197,37 @@ void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font) {
     SDL_RenderDrawRect(renderer, &this->tile_rect);
 
     // Draw tile text
-    // TODO: Creating the text each time is expensive and prone to extensive memory usage.
-    // TODO: Create the text for each tile only once, and only render it after
     if (this->is_exposed() == true) {
         if (this->tile_number > 0 && !this->is_bomb() && !this->is_flagged()) {
-            // std::cout << "Print number" << std::endl;
-            // TTF_Font *font = TTF_OpenFont("arialbd.ttf", 24);
-
-            SDL_Surface *text;
-            SDL_Color color = {0, 0, 0};
-
-            std::string num = std::to_string(this->tile_number);
-
-            text = TTF_RenderText_Solid(font, num.c_str(), color);
-
-            SDL_Texture *text_texture = SDL_CreateTextureFromSurface(renderer, text);
-
-            pair_uint temp_pos = this->get_position();
-
-            SDL_Rect dest = {
-                (int)temp_pos.first + (int)this->size.first / 4,
-                (int)temp_pos.second + (int)this->size.second / 4,
-                text->w,
-                text->h
-            };
-
-            SDL_RenderCopy(renderer, text_texture, NULL, &dest);
-            SDL_DestroyTexture(text_texture);
+            SDL_RenderCopy(renderer, this->text_texture, NULL, &(this->dest));
         }
     }
+}
+
+void Tile::prep_text_rendering(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font) {
+    this->set_text(color, font);
+    this->set_text_texture(renderer);
+    this->set_text_dest();
+}
+
+void Tile::set_text(SDL_Color color, TTF_Font *font) {
+    std::string num = std::to_string(this->tile_number);
+
+    this->text = TTF_RenderText_Solid(font, num.c_str(), color);
+}
+
+void Tile::set_text_texture(SDL_Renderer *renderer) {
+    this->text_texture = SDL_CreateTextureFromSurface(renderer, text);
+}
+
+void Tile::set_text_dest() {
+    pair_uint temp_pos = this->get_position();
+
+    this->dest = {
+        (int)temp_pos.first + (int)this->size.first / 4,
+        (int)temp_pos.second + (int)this->size.second / 4,
+        this->text->w,
+        this->text->h
+    };
 }
 

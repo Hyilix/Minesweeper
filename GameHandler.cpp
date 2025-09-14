@@ -100,6 +100,8 @@ void GameHandler::event_handler() {
                         std::vector<pair_uint> bombs = randomiser->get_bomb_coordinates();
                         this->get_map()->set_bombs(bombs);
 
+                        this->get_map()->prep_tile_text(this->renderer, this->color, this->font);
+
                         std::vector<pair_uint> tiles = randomiser->get_grace_coordinates();
                         this->get_map()->open_tiles(tiles);
 

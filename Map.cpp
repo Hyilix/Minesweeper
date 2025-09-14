@@ -1,4 +1,5 @@
 #include "Map.hpp"
+#include <SDL2/SDL_render.h>
 
 Tile ***__make_empty_neighbor_map() {
     Tile ***neighbors = new Tile**[3];
@@ -357,6 +358,17 @@ unsigned int Map::get_flags_around_tile(Tile ***neighbors) {
         }
     }
     return flag_count;
+}
+
+void Map::prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font) {
+    unsigned int x_pos = this->get_dimensions().first;
+    unsigned int y_pos = this->get_dimensions().second;
+
+    for (unsigned int y = 0; y < y_pos; y++) {
+        for (unsigned int x = 0; x < x_pos; x++) {
+            tiles[y][x]->prep_text_rendering(renderer, color, font);
+        }
+    }
 }
 
 void Map::DEBUG_print_tile_numbers() {
