@@ -1,32 +1,29 @@
-CC = g++
-FLAGS = -lSDL2 -lSDL2_ttf
-OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
-TARGET = Minesweeper
+CXX ?= g++
+CXXFLAGS = -I/usr/x86_64-w64-mingw32/include/SDL2
+LDFLAGS  = -Wl,-subsystem,console -static-libgcc -static-libstdc++
+LDLIBS   = -lSDL2 -lSDL2_ttf
 
-.PHONY: build run clean
+OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
+TARGET  = Minesweeper
+
+ifeq ($(findstring mingw,$(CXX)),mingw)
+    TARGET = Minesweeper.exe
+endif
+
+.PHONY: all build run clean
+
+all: build
 
 build: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CC) $(FLAGS) -o ./$@ $(OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
-main.o: main.cpp GameHandler.hpp
-	$(CC) $(FLAGS) -c main.cpp
-
-GameHandler.o: GameHandler.cpp GameHandler.hpp Map.hpp
-	$(CC) $(FLAGS) -c GameHandler.cpp
-
-Tile.o: Tile.cpp Tile.hpp
-	$(CC) $(FLAGS) -c Tile.cpp
-
-Map.o: Map.cpp Map.hpp Tile.hpp Randomiser.h
-	$(CC) $(FLAGS) -c Map.cpp
-
-Randomiser.o: Randomiser.cpp Randomiser.h Custom_Types.h
-	$(CC) $(FLAGS) -c Randomiser.cpp
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf ./$(TARGET) *.o
+	rm -f $(TARGET) *.o
 
 run: $(TARGET)
 	./$(TARGET)
