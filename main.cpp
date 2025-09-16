@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unistd.h>
 
 #include "GameHandler.hpp"
 
@@ -15,6 +16,8 @@ GameHandler *gamehandler = new GameHandler;
  */
 
 // TODO: Revealing a tile through fast-reveal will also apply fast-reveal, making a chain. This should not happen
+// TODO: Add timer and bomb/flag count to window title
+// TODO: Add user custom game settings via command args (hint: getopt)
 
 int main(int argc, char *argv[]) {
     char gamename[] = "Minesweeper";
@@ -28,15 +31,24 @@ int main(int argc, char *argv[]) {
     game_settings->map_y_size = 20;
     /* ^^^ Map Settings ^^^ */
 
-    // TODO
-    // Check for user-defined settings
-    if (argc > 1) {
-        switch (argc) {
-            case 2:
+    // Handle user settings
+    int option;
+    while ((option = getopt(argc, argv, "b:w:h:")) != -1) {
+        switch (option) {
+            case 'b':
+                game_settings->bomb_count = atoi(optarg);
                 break;
-            case 4:
+            case 'w':
+                game_settings->map_x_size = atoi(optarg);
                 break;
-            default:
+            case 'h':
+                game_settings->map_y_size = atoi(optarg);
+                break;
+            case ':':
+                std::cout << "option needs a value" << std::endl;
+                break;
+            case '?':
+                std::cout << "unknown option: " << optopt << std::endl;
                 break;
         }
     }
