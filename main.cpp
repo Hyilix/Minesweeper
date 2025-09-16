@@ -14,6 +14,8 @@ GameHandler *gamehandler = new GameHandler;
  *      -> y
  */
 
+// TODO: Revealing a tile through fast-reveal will also apply fast-reveal, making a chain. This should not happen
+
 int main(int argc, char *argv[]) {
     char gamename[] = "Minesweeper";
 
@@ -21,7 +23,7 @@ int main(int argc, char *argv[]) {
     game_settings_t *game_settings = new game_settings_t;
 
     /* vvv Map Settings vvv */
-    game_settings->bomb_count = 0;
+    game_settings->bomb_count = 40;
     game_settings->map_x_size = 10;
     game_settings->map_y_size = 20;
     /* ^^^ Map Settings ^^^ */

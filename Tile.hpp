@@ -9,6 +9,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
+#include "Custom_Types.h"
+
 #define TILE_DEFAULT_SIZE 50
 
 class Tile {
@@ -17,14 +19,14 @@ class Tile {
         ~Tile();
 
         // Basic tile actions
-        void set_exposed_tile();
+        bool set_exposed_tile(bool force_reveal = false);
         void set_flag_tile();
 
         void set_tile_number(int number);
         void increment_tile_number(int number = 1);
         int get_tile_number();
 
-        void click_action(Uint8 button);
+        bool click_action(Uint8 button, unsigned int *revealed_tiles = NULL);
 
         std::pair<unsigned int, unsigned int> get_position();
         std::pair<unsigned int, unsigned int> get_raw_position();

@@ -68,16 +68,13 @@ void Randomiser_2D::apply_grace_to_grid() {
     for (int y = y_pos - scale / 2; y <= y_pos + scale / 2; y++) {
         // Out-of-bounds check
         if (y < 0 || y >= this->map_dimensions.second) {
-            std::cout << "ERROR y: " << y << std::endl;
             continue;
         }
         for (int x = x_pos - scale / 2; x <= x_pos + scale / 2; x++) {
             // Out-of-bounds check
             if (x < 0 || x >= this->map_dimensions.first) {
-                std::cout << "ERROR x: " << x << std::endl;
                 continue;
             }
-            // std::cout << "GRACE: " << y << " " << x << std::endl;
             this->grid[y][x] = true;
 
             pair_uint temp_coords(x, y);

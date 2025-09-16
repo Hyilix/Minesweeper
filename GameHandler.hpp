@@ -1,8 +1,6 @@
 #ifndef GAMEHANDLER_HPP
 #define GAMEHANDLER_HPP
 
-#include <iostream>
-
 #include "Map.hpp"
 
 typedef struct {
@@ -13,12 +11,16 @@ typedef struct {
     unsigned int bomb_count;
 } game_settings_t;
 
+#define GAME_OVER_TEXT "Game Over! Press ESC to quit"
+#define GAME_WON_TEXT "Game WON! Press ESC to quit"
+
 class GameHandler {
     public:
         GameHandler();
         ~GameHandler();
 
         bool game_started = false;
+        bool game_ended = false;
 
         void init(Uint32 flags = SDL_INIT_EVERYTHING);
         void create_window(char *name, int x, int y, int h, int w, Uint32 flags);

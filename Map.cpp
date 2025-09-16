@@ -13,10 +13,12 @@ Tile ***__make_empty_neighbor_map() {
 Map::Map() {
     std::cout << "Map initialised!" << std::endl;
 
+    this->revealed_tiles = 0;
+
     unsigned int default_x_size = 5;
     unsigned int default_y_size = 10;
 
-    this->set_universal_tile_size(50, 50);
+    this->set_universal_tile_size(TILE_Y_SIZE, TILE_X_SIZE);
     this->set_dimensions(default_x_size, default_y_size);
 
     pair_uint temp_pair(default_x_size, default_y_size);
@@ -27,7 +29,9 @@ Map::Map(unsigned int x_size, unsigned int y_size) {
     std::cout << "Map initialised with dimensions: " << std::endl;
     std::cout << x_size << " " << y_size << std::endl;
 
-    this->set_universal_tile_size(50, 50);
+    this->revealed_tiles = 0;
+
+    this->set_universal_tile_size(TILE_Y_SIZE, TILE_X_SIZE);
     this->set_dimensions(x_size, y_size);
 
     pair_uint temp_pair(x_size, y_size);
@@ -266,8 +270,32 @@ void Map::open_tiles(std::vector<pair_uint> tiles) {
     }
 }
 
-void Map::tile_action(Tile *tile, uint8_t button) {
-    tile->click_action(button);
+void Map::reveal_all_bombs() {
+    unsigned int x_pos = this->get_dimensions().first;
+    unsigned int y_pos = this->get_dimensions().second;
+
+    // unsigned int x_size = this->get_universal_tile_size().first;
+    // unsigned int y_size = this->get_universal_tile_size().second;
+
+    for (unsigned int y = 0; y < y_pos; y++) {
+        for (unsigned int x = 0; x < x_pos; x++) {
+            Tile *current_tile = this->tiles[y][x];
+            if (current_tile->is_bomb()) {
+                if (current_tile->is_flagged()) {
+                    current_tile->set_exposed_color(187, 219, 68, 0);
+                }
+                current_tile->set_exposed_tile(true);
+            }
+        }
+    }
+}
+
+void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed) {
+    bool bomb_detected = tile->click_action(button, &this->revealed_tiles);
+
+    if (bomb_pressed != NULL && *bomb_pressed == false) {
+        *bomb_pressed = bomb_detected;
+    }
 
     unsigned int y_pos = tile->get_raw_position().second;
     unsigned int x_pos = tile->get_raw_position().first;
@@ -287,7 +315,7 @@ void Map::tile_action(Tile *tile, uint8_t button) {
                     }
 
                     if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                        this->tile_action(temp_tile, button);
+                        this->tile_action(temp_tile, button, bomb_pressed);
                     }
                 }
             }
@@ -307,7 +335,7 @@ void Map::tile_action(Tile *tile, uint8_t button) {
                         }
 
                         if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                            this->tile_action(temp_tile, button);
+                            this->tile_action(temp_tile, button, bomb_pressed);
                         }
                     }
                 }
@@ -369,6 +397,13 @@ void Map::prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font
             tiles[y][x]->prep_text_rendering(renderer, color, font);
         }
     }
+}
+
+bool Map::is_game_won() {
+    unsigned int tiles = this->dimensions.first * this->dimensions.second;
+    tiles -= this->bombs;
+
+    return this->revealed_tiles == tiles;
 }
 
 void Map::DEBUG_print_tile_numbers() {

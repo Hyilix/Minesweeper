@@ -1,6 +1,7 @@
 #include "GameHandler.hpp"
 #include "Custom_Types.h"
 #include "Randomiser.h"
+#include <SDL2/SDL_video.h>
 
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
@@ -12,6 +13,10 @@ GameHandler::GameHandler() {
     // Font prearations
     TTF_Init();
     this->font = TTF_OpenFont("arialbd.ttf", 24);
+
+    this->game_started = false;
+    this->game_ended = false;
+    this->running = false;
 }
 
 GameHandler::~GameHandler() {
@@ -75,44 +80,61 @@ void GameHandler::event_handler() {
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    // Raw mouse coordinates
-                    Sint32 mouse_x = event.button.x;
-                    Sint32 mouse_y = event.button.y;
+                    if (!this->game_ended) {
+                        // Raw mouse coordinates
+                        Sint32 mouse_x = event.button.x;
+                        Sint32 mouse_y = event.button.y;
 
-                    Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
+                        Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
-                    if (this->game_started) {
-                        // temp_tile->click_action(event.button.button);
-                        map->tile_action(temp_tile, event.button.button);
+                        if (this->game_started) {
+                            bool *bomb_pressed = new bool;
+                            *bomb_pressed = false;
+
+                            map->tile_action(temp_tile, event.button.button, bomb_pressed);
+
+                            // Game over
+                            if (*bomb_pressed == true) {
+                                std::cout << "handler bomb pressed" << std::endl;
+
+                                this->get_map()->reveal_all_bombs();
+                                SDL_SetWindowTitle(this->window, GAME_OVER_TEXT);
+                                this->game_ended = true;
+                            }
+                        }
+                        else {
+                            this->game_started = true;
+
+                            Randomiser_2D *randomiser = this->get_map()->get_randomiser();
+
+                            // Prepare the randomiser
+                            randomiser->set_random_count(this->get_map()->get_bomb_count());
+                            randomiser->set_init_position(temp_tile->get_raw_position());
+                            randomiser->apply_grace_to_grid();
+
+                            randomiser->randomise();
+
+                            std::vector<pair_uint> bombs = randomiser->get_bomb_coordinates();
+                            this->get_map()->set_bombs(bombs);
+
+                            this->get_map()->prep_tile_text(this->renderer, this->color, this->font);
+
+                            std::vector<pair_uint> tiles = randomiser->get_grace_coordinates();
+                            this->get_map()->open_tiles(tiles);
+
+                            // DEBUG PRINT
+                            // randomiser->DEBUG_print_grid();
+                            // randomiser->DEBUG_print_bombs();
+                            // map->DEBUG_print_tile_numbers();
+
+                            delete randomiser;
+                        }
+                        if (this->get_map()->is_game_won()) {
+                            SDL_SetWindowTitle(this->window, GAME_WON_TEXT);
+                            this->game_ended = true;
+                        }
+                        break;
                     }
-                    else {
-                        this->game_started = true;
-
-                        Randomiser_2D *randomiser = this->get_map()->get_randomiser();
-
-                        // Prepare the randomiser
-                        randomiser->set_random_count(40);
-                        randomiser->set_init_position(temp_tile->get_raw_position());
-                        randomiser->apply_grace_to_grid();
-
-                        randomiser->randomise();
-
-                        std::vector<pair_uint> bombs = randomiser->get_bomb_coordinates();
-                        this->get_map()->set_bombs(bombs);
-
-                        this->get_map()->prep_tile_text(this->renderer, this->color, this->font);
-
-                        std::vector<pair_uint> tiles = randomiser->get_grace_coordinates();
-                        this->get_map()->open_tiles(tiles);
-
-                        // DEBUG PRINT
-                        // randomiser->DEBUG_print_grid();
-                        // randomiser->DEBUG_print_bombs();
-                        // map->DEBUG_print_tile_numbers();
-
-                        delete randomiser;
-                    }
-                    break;
             }
         }
     }

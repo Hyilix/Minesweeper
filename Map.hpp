@@ -7,6 +7,9 @@
 #include "Randomiser.h"
 #include "Tile.hpp"
 
+#define TILE_Y_SIZE 50
+#define TILE_X_SIZE 50
+
 class Map {
     public:
         Map();
@@ -48,10 +51,13 @@ class Map {
 
         void set_bombs(std::vector<pair_uint> bombs);
         void open_tiles(std::vector<pair_uint> tiles);
+        void reveal_all_bombs();
 
-        void tile_action(Tile *tile, uint8_t button);
+        void tile_action(Tile *tile, uint8_t button, bool *bomb_pressed = NULL);
 
         void prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
+
+        bool is_game_won();
 
         void DEBUG_print_tile_numbers();
 
@@ -67,6 +73,7 @@ class Map {
         // dimensions of a tile
         std::pair<unsigned int, unsigned int> universal_tile_size;
 
+        unsigned int revealed_tiles = 0;
         unsigned int bombs;
         unsigned int flags;
 

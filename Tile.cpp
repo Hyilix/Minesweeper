@@ -1,7 +1,4 @@
 #include "Tile.hpp"
-#include "Custom_Types.h"
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_ttf.h>
 
 Tile::Tile() {
     // std::cout << "Tile initialised!" << std::endl;
@@ -16,13 +13,15 @@ Tile::~Tile() {
     std::cout << "Tile Destroyed!" << std::endl;
 }
 
-void Tile::set_exposed_tile() {
+bool Tile::set_exposed_tile(bool force_reveal) {
     bool is_exposed = this->is_exposed();
     bool is_flagged = this->is_flagged();
 
-    if (is_exposed == false && is_flagged == false) {
+    if ((is_exposed == false && is_flagged == false) || force_reveal == true) {
         this->set_exposed(true);
+        return true;
     }
+    return false;
 }
 
 void Tile::set_flag_tile() {
@@ -46,13 +45,20 @@ int Tile::get_tile_number() {
     return this->tile_number;
 }
 
-void Tile::click_action(Uint8 button) {
+bool Tile::click_action(Uint8 button, unsigned int *revealed_tiles) {
     if (button == LEFT_CLICK) {
-        this->set_exposed_tile();
+        bool success = this->set_exposed_tile();
+        if (this->is_bomb() && success) {
+            return true;
+        }
+        if (revealed_tiles && success) {
+            *revealed_tiles += 1;
+        }
     }
     else if (button == RIGHT_CLICK) {
         this->set_flag_tile();
     }
+    return false;
 }
 
 std::pair<unsigned int, unsigned int> Tile::get_position() {
