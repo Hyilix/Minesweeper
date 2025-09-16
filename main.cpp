@@ -7,17 +7,11 @@
 // Pointer to the main gamehandler.
 GameHandler *gamehandler = new GameHandler;
 
-/* User-defined settings format: */
-/*
- * -> bomb count
- * -> map_size
- *      -> x
- *      -> y
- */
-
-// TODO: Revealing a tile through fast-reveal will also apply fast-reveal, making a chain. This should not happen
+// TODO: (Maybe?) Revealing a tile through fast-reveal will also apply fast-reveal, making a chain. This should not happen
 // TODO: Add timer and bomb/flag count to window title
-// TODO: Add user custom game settings via command args (hint: getopt)
+// TODO: Stop bomb spawning neighboring only bombs
+// TODO: Code Cleanup
+// TODO: Update README
 
 int main(int argc, char *argv[]) {
     char gamename[] = "Minesweeper";
