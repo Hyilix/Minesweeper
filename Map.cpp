@@ -38,7 +38,15 @@ Map::Map(unsigned int x_size, unsigned int y_size) {
 }
 
 Map::~Map() {
-    std::cout << "Map destroyed!" << std::endl;
+    // Delete all tiles
+    for (unsigned int y = 0; y < this->dimensions.second; y++) {
+        for (unsigned int x = 0; x < this->dimensions.first; x++) {
+            delete this->tiles[y][x];
+        }
+        delete this->tiles[y];
+    }
+    delete this->tiles;
+
 }
 
 void Map::create_empty_map() {
@@ -340,6 +348,11 @@ void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed, unsigned i
                 }
             }
         }
+
+        for (unsigned int y = 0; y < 3; y++) {
+            delete neighbors[y];
+        }
+        delete neighbors;
     }
 }
 

@@ -1,8 +1,7 @@
 #include "Tile.hpp"
+#include <SDL2/SDL_render.h>
 
 Tile::Tile() {
-    // std::cout << "Tile initialised!" << std::endl;
-
     // Set default colors
     this->set_hidden_color(180, 180, 180, 0);
     this->set_exposed_color(128, 128, 128, 0);
@@ -10,7 +9,8 @@ Tile::Tile() {
 }
 
 Tile::~Tile() {
-    std::cout << "Tile Destroyed!" << std::endl;
+    SDL_DestroyTexture(this->text_texture);
+    SDL_FreeSurface(this->text);
 }
 
 bool Tile::set_exposed_tile(bool force_reveal) {

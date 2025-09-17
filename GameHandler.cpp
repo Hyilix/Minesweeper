@@ -21,7 +21,10 @@ GameHandler::~GameHandler() {
 
     // vvv Cleanup functions vvv
     SDL_Quit();
+    TTF_CloseFont(this->font);
     TTF_Quit();
+
+    delete this->map;
 }
 
 void GameHandler::init(Uint32 flags) {

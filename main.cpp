@@ -11,7 +11,6 @@ GameHandler *gamehandler = new GameHandler;
 // TODO: Stop bomb spawning neighboring only bombs
 // TODO: Code Cleanup
 // TODO: Update README
-// TODO: Fix mem-leaks
 
 int main(int argc, char *argv[]) {
     char gamename[] = "Minesweeper";
