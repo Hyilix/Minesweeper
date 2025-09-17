@@ -1,7 +1,4 @@
 #include "GameHandler.hpp"
-#include "Custom_Types.h"
-#include "Randomiser.h"
-#include <SDL2/SDL_video.h>
 
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;

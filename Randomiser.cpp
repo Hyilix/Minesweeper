@@ -1,5 +1,4 @@
 #include "Randomiser.h"
-#include "Custom_Types.h"
 
 Randomiser_2D::Randomiser_2D(pair_uint dimensions) {
     srand(time(NULL));
@@ -75,6 +74,7 @@ void Randomiser_2D::apply_grace_to_grid() {
             if (x < 0 || x >= this->map_dimensions.first) {
                 continue;
             }
+
             this->grid[y][x] = true;
 
             pair_uint temp_coords(x, y);
@@ -98,6 +98,29 @@ bool Randomiser_2D::fill_random_pos() {
             std::cout << "THIS ATTEMPT: " << this->grid[y_rand_pos][x_rand_pos] << " ";
             std::cout << "POSITION: " << x_rand_pos << " " << y_rand_pos << " ";
             std::cout << "ATTEMPTS: " << attempts << std::endl;
+        }
+
+        // Check if all neighbors are true
+        bool safe_true = false;
+        for (int y_local = -1; y_local <= 1; y_local++) {
+            // Out-of-bounds check
+            if (y_local + y_rand_pos < 0 || y_local + y_rand_pos >= this->map_dimensions.second) {
+                continue;
+            }
+            for (int x_local = -1; x_local <= 1; x_local++) {
+                // Out-of-bounds check
+                if (x_local + x_rand_pos < 0 || x_local + x_rand_pos >= this->map_dimensions.first) {
+                    continue;
+                }
+                if (this->grid[y_local + y_rand_pos][x_local + x_rand_pos] == false) {
+                    safe_true = true;
+                }
+            }
+        }
+
+        // Skip this bomb, only bombs as neighbors
+        if (!safe_true) {
+            continue;
         }
 
         if (this->grid[y_rand_pos][x_rand_pos] == false) {

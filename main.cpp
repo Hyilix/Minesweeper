@@ -7,7 +7,6 @@
 // Pointer to the main gamehandler.
 GameHandler *gamehandler = new GameHandler;
 
-// TODO: (Maybe?) Revealing a tile through fast-reveal will also apply fast-reveal, making a chain. This should not happen
 // TODO: Add timer and bomb/flag count to window title
 // TODO: Stop bomb spawning neighboring only bombs
 // TODO: Code Cleanup
@@ -20,11 +19,11 @@ int main(int argc, char *argv[]) {
     // Create new map settings
     game_settings_t *game_settings = new game_settings_t;
 
-    /* vvv Map Settings vvv */
-    game_settings->bomb_count = 40;
+    /* vvv Default Map Settings vvv */
+    game_settings->bomb_count = 70;
     game_settings->map_x_size = 10;
     game_settings->map_y_size = 20;
-    /* ^^^ Map Settings ^^^ */
+    /* ^^^ Default Map Settings ^^^ */
 
     // Handle user settings
     int option;

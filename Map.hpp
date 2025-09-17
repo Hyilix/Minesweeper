@@ -53,7 +53,7 @@ class Map {
         void open_tiles(std::vector<pair_uint> tiles);
         void reveal_all_bombs();
 
-        void tile_action(Tile *tile, uint8_t button, bool *bomb_pressed = NULL);
+        void tile_action(Tile *tile, uint8_t button, bool *bomb_pressed = NULL, unsigned int count = 0);
 
         void prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
 

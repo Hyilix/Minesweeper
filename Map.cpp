@@ -1,5 +1,4 @@
 #include "Map.hpp"
-#include <SDL2/SDL_render.h>
 
 Tile ***__make_empty_neighbor_map() {
     Tile ***neighbors = new Tile**[3];
@@ -290,7 +289,7 @@ void Map::reveal_all_bombs() {
     }
 }
 
-void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed) {
+void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed, unsigned int count) {
     bool bomb_detected = tile->click_action(button, &this->revealed_tiles);
 
     if (bomb_pressed != NULL && *bomb_pressed == false) {
@@ -322,7 +321,7 @@ void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed) {
         }
         // Fast click on an exposed tile with flags around it
         // to reveal all neighbors
-        else if (tile->is_exposed()) {
+        else if (tile->is_exposed() && count == 0) {
             unsigned int flag_count = this->get_flags_around_tile(neighbors);
 
             if (flag_count == tile->get_tile_number()) {
@@ -335,7 +334,7 @@ void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed) {
                         }
 
                         if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                            this->tile_action(temp_tile, button, bomb_pressed);
+                            this->tile_action(temp_tile, button, bomb_pressed, 1);
                         }
                     }
                 }

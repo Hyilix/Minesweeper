@@ -5,9 +5,10 @@ LDLIBS   = -lSDL2 -lSDL2_ttf
 
 OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
 TARGET  = Minesweeper
+TARGET_WIN = Minesweeper.exe
 
 ifeq ($(findstring mingw,$(CXX)),mingw)
-	TARGET = Minesweeper.exe
+	TARGET = $(TARGET_WIN)
 	LDFLAGS  = -Wl,-subsystem,console -static-libgcc -static-libstdc++
 endif
 
@@ -25,6 +26,7 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	rm -f $(TARGET) *.o
+	rm -f $(TARGET_WIN) *.o
 
 run: $(TARGET)
 	./$(TARGET)
