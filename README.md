@@ -24,7 +24,7 @@ This game uses SDL2 and SDL2/TTF as dynamically linked libraries. The necessary 
 
 In the source code, there is a makefile that builds automatically.
 
-The main compiler used was **g++** (linux), although other compilers should work just fine if the correct SDL2 files are present.
+The main compiler used was **gcc/g++** (linux), although other compilers should work just fine if the correct SDL2 files are present.
 
 ### Linux
 
