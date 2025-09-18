@@ -11,6 +11,7 @@ typedef struct {
 
     // Interface settings
     bool allow_fast_reveal;
+    unsigned int fps;
 
     // Dev settings
     bool visible_hidden_bombs;
@@ -30,7 +31,7 @@ class GameHandler {
         bool game_started = false;
         bool game_ended = false;
 
-        void init(Uint32 flags = SDL_INIT_EVERYTHING);
+        void init(game_settings_t *settings, Uint32 flags = SDL_INIT_EVERYTHING);
         void create_window(char *name, int x, int y, int h, int w, Uint32 flags);
         void create_renderer(SDL_Window *window, int index, Uint32 flags);
 
@@ -58,6 +59,7 @@ class GameHandler {
         void apply_fps_limit();
 
     private:
+        game_settings_t *settings;
         void calculate_frame_delay(); 
 
         bool running = false;

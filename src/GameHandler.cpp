@@ -3,10 +3,6 @@
 GameHandler::GameHandler() {
     std::cout << "Game Handler initialised!" << std::endl;
 
-    // vvv Init functions vvv
-    this->set_fps(255);
-    this->calculate_frame_delay();
-
     // Font prearations
     TTF_Init();
     this->font = TTF_OpenFont(DEFAULT_FONT_PATH, DEFAULT_FONT_SIZE);
@@ -27,7 +23,11 @@ GameHandler::~GameHandler() {
     delete this->map;
 }
 
-void GameHandler::init(Uint32 flags) {
+void GameHandler::init(game_settings_t *settings, Uint32 flags) {
+    this->settings = settings;
+    this->set_fps(settings->fps);
+    this->calculate_frame_delay();
+
     SDL_Init(flags);
     this->set_background_color(0, 0, 0, 0);
 }

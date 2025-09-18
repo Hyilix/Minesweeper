@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <unistd.h>
+#include <getopt.h>
 
 #include "GameHandler.hpp"
 
@@ -24,15 +24,23 @@ int main(int argc, char *argv[]) {
     game_settings->map_y_size = 20;
 
     game_settings->allow_fast_reveal = true;
+    game_settings->fps = 255;
 
     game_settings->visible_hidden_bombs = false;
     /* ^^^ Default Settings ^^^ */
 
+    static struct option long_options[] = {
+        {"fps", required_argument, NULL, 1},
+        {0, 0, 0, 0}
+    };
+
     // Handle user settings
+    int option_index = 0;
     int option;
-    while ((option = getopt(argc, argv, "b:w:h:r:V:")) != -1) {
+    while ((option = getopt_long(argc, argv, "b:w:h:r:V:", long_options, &option_index)) != -1) {
         switch (option) {
             case 'b':
+                // Handle bomb count
                 game_settings->bomb_count = atoi(optarg);
                 break;
             case 'w':
@@ -47,6 +55,12 @@ int main(int argc, char *argv[]) {
             case 'V':
                 game_settings->visible_hidden_bombs = str_to_bool(optarg);
                 break;
+
+            case 1:
+                // Handle --fps
+                game_settings->fps = atoi(optarg);
+                break;
+
             case ':':
                 std::cout << "option needs a value" << std::endl;
                 break;
@@ -57,7 +71,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Initialise and create window / renderer
-    gamehandler->init();
+    gamehandler->init(game_settings);
     gamehandler->create_map(game_settings);
 
     // Get window size
