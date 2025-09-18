@@ -1,7 +1,7 @@
 CXX ?= g++
 CXXFLAGS = -I/usr/x86_64-w64-mingw32/include/SDL2
 LDFLAGS  =
-LDLIBS   = -lstdc++ -lSDL2 -lSDL2_ttf
+LDLIBS   = -lSDL2 -lSDL2_ttf
 
 OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o Utils.o
 TARGET  = Minesweeper
