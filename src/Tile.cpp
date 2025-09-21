@@ -45,6 +45,7 @@ bool Tile::click_action(Uint8 button, unsigned int *revealed_tiles) {
     if (button == LEFT_CLICK) {
         bool success = this->set_exposed_tile();
         if (this->is_bomb() && success) {
+            std::cout << "BOOOM!";
             return true;
         }
         if (revealed_tiles && success) {
@@ -181,12 +182,18 @@ SDL_Rect Tile::get_tile_rectangle() {
     return this->tile_rect;
 }
 
-void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font) {
+void Tile::draw_tile(SDL_Renderer *renderer, TTF_Font *font, bool force_draw_bomb) {
     // Determine the color of the tile
     SDL_Color actual_color = this->get_exposed_color();
 
     if (this->is_exposed() == false) {
-        actual_color = this->get_hidden_color();
+        if (this->is_bomb() && force_draw_bomb && !this->is_flagged()) {
+            this->switch_to_bomb_color();
+            actual_color = this->get_exposed_color();
+        }
+        else {
+            actual_color = this->get_hidden_color();
+        }
     }
 
     // draw the rectangle

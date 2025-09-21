@@ -63,7 +63,7 @@ class Tile {
         void create_tile_rectangle();
         SDL_Rect get_tile_rectangle();
 
-        void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL);
+        void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL, bool force_draw_bomb = false);
 
         void prep_text_rendering(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
 

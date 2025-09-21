@@ -134,7 +134,7 @@ void Map::fill_map(SDL_Renderer *renderer) {
     }
 }
 
-void Map::render_map(SDL_Renderer *renderer, TTF_Font *font) {
+void Map::render_map(SDL_Renderer *renderer, TTF_Font *font, bool force_draw_bomb) {
     unsigned int x_pos = this->get_dimensions().first;
     unsigned int y_pos = this->get_dimensions().second;
 
@@ -143,7 +143,7 @@ void Map::render_map(SDL_Renderer *renderer, TTF_Font *font) {
 
     for (unsigned int y = 0; y < y_pos; y++) {
         for (unsigned int x = 0; x < x_pos; x++) {
-            (this->get_tiles()[y][x])->draw_tile(renderer, font);
+            (this->get_tiles()[y][x])->draw_tile(renderer, font, force_draw_bomb);
         }
     }
 }
@@ -290,18 +290,26 @@ void Map::reveal_all_bombs() {
             if (!current_tile->is_bomb()) {
                 if (current_tile->is_flagged()) {
                     current_tile->set_exposed_color(this->tile_wrong_flag);
+                    current_tile->set_exposed_tile(true);
                 }
+            }
+            else if (!current_tile->is_flagged()){
                 current_tile->set_exposed_tile(true);
             }
         }
     }
 }
 
-void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed, unsigned int count) {
+void Map::tile_action(Tile *tile, uint8_t button) {
     bool bomb_detected = tile->click_action(button, &this->revealed_tiles);
 
-    if (bomb_pressed != NULL && *bomb_pressed == false) {
-        *bomb_pressed = bomb_detected;
+    // if (bomb_pressed != NULL && *bomb_pressed == false) {
+    //     *bomb_pressed = bomb_detected;
+    // }
+
+    if (bomb_detected) {
+        this->game_lost = true;
+        return;
     }
 
     unsigned int y_pos = tile->get_raw_position().second;
@@ -322,14 +330,14 @@ void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed, unsigned i
                     }
 
                     if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                        this->tile_action(temp_tile, button, bomb_pressed);
+                        this->tile_action(temp_tile, button);
                     }
                 }
             }
         }
         // Fast click on an exposed tile with flags around it
         // to reveal all neighbors
-        else if (tile->is_exposed() && count == 0) {
+        else if (tile->is_exposed()) {
             unsigned int flag_count = this->get_flags_around_tile(neighbors);
 
             if (flag_count == tile->get_tile_number()) {
@@ -337,12 +345,14 @@ void Map::tile_action(Tile *tile, uint8_t button, bool *bomb_pressed, unsigned i
                     for (unsigned int x = 0; x < 3; x++) {
                         Tile *temp_tile = neighbors[y][x];
 
-                        if (temp_tile == NULL) {
+                        if (temp_tile == NULL || (y == 0 && x == 0)) {
                             continue;
                         }
 
                         if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                            this->tile_action(temp_tile, button, bomb_pressed, 1);
+                            // this->tile_action(temp_tile, button);
+                            temp_tile->click_action(button, &this->revealed_tiles);
+                            std::cout << temp_tile->get_raw_position().first << " " << temp_tile->get_raw_position().second;
                         }
                     }
                 }

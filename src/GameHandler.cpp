@@ -26,7 +26,6 @@ GameHandler::~GameHandler() {
 void GameHandler::init(game_settings_t *settings, Uint32 flags) {
     this->settings = settings;
     this->set_fps(settings->fps);
-    this->calculate_frame_delay();
 
     SDL_Init(flags);
     this->set_background_color(0, 0, 0, 0);
@@ -88,13 +87,10 @@ void GameHandler::event_handler() {
                         Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
                         if (this->game_started) {
-                            bool *bomb_pressed = new bool;
-                            *bomb_pressed = false;
-
-                            map->tile_action(temp_tile, event.button.button, bomb_pressed);
+                            map->tile_action(temp_tile, event.button.button);
 
                             // Game over
-                            if (*bomb_pressed == true) {
+                            if (map->game_lost) {
                                 std::cout << "handler bomb pressed" << std::endl;
 
                                 this->get_map()->reveal_all_bombs();
@@ -146,7 +142,7 @@ void GameHandler::render_logic() {
     SDL_RenderClear(this->renderer);
 
     // Render the current map
-    (this->get_map())->render_map(this->get_renderer(), this->font);
+    (this->get_map())->render_map(this->get_renderer(), this->font, this->settings->visible_hidden_bombs);
 
     // Update the screen
     SDL_RenderPresent(this->renderer);
@@ -168,7 +164,8 @@ SDL_Renderer *GameHandler::get_renderer() {
     return this->renderer;
 }
 
-void GameHandler::create_map(game_settings_t *settings) {
+void GameHandler::create_map() {
+    auto settings = this->settings;
     Map *new_map = new Map(settings->map_x_size, settings->map_y_size);
 
     new_map->create_empty_map();
@@ -195,8 +192,10 @@ Map *GameHandler::get_map() {
 }
 
 void GameHandler::set_fps(unsigned int FPS) {
-    this->FPS = FPS;
-    this->calculate_frame_delay();
+    if (FPS != 0) {
+        this->FPS = FPS;
+        this->calculate_frame_delay();
+    }
 }
 
 unsigned int GameHandler::get_fps() {
@@ -209,11 +208,13 @@ void GameHandler::calculate_frame_delay() {
 
 void GameHandler::apply_fps_limit() {
     // Limit the gameloop to the set FPS
-    Uint32 frame_start = SDL_GetTicks();
-    int frame_time = SDL_GetTicks() - frame_start;
+    if (this->FPS != 0) {
+        Uint32 frame_start = SDL_GetTicks();
+        int frame_time = SDL_GetTicks() - frame_start;
 
-    if (this->frame_delay > frame_time) {
-        SDL_Delay(this->frame_delay - frame_time);
+        if (this->frame_delay > frame_time) {
+            SDL_Delay(this->frame_delay - frame_time);
+        }
     }
 }
 

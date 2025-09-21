@@ -49,7 +49,7 @@ class GameHandler {
 
         void set_running(bool value);
 
-        void create_map(game_settings_t *settings);
+        void create_map();
         void create_map_debug();
         Map *get_map();
 
@@ -71,7 +71,7 @@ class GameHandler {
         // background color
         SDL_Color color;
 
-        unsigned int FPS;
+        unsigned int FPS = 0;
         unsigned int frame_delay;
 
         SDL_Color tile_text_color = {0, 0, 0};

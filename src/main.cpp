@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
 
     static struct option long_options[] = {
         {"fps", required_argument, NULL, 1},
+        {"visible", no_argument, NULL, 'V'},
+        {"fast_reveal", required_argument, NULL, 'r'},
         {0, 0, 0, 0}
     };
 
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]) {
                 game_settings->allow_fast_reveal = str_to_bool(optarg);
                 break;
             case 'V':
-                game_settings->visible_hidden_bombs = str_to_bool(optarg);
+                game_settings->visible_hidden_bombs = true;
                 break;
 
             case 1:
@@ -72,7 +74,7 @@ int main(int argc, char *argv[]) {
 
     // Initialise and create window / renderer
     gamehandler->init(game_settings);
-    gamehandler->create_map(game_settings);
+    gamehandler->create_map();
 
     // Get window size
     unsigned int window_x_size = (gamehandler->get_map())->get_universal_tile_size().first;
