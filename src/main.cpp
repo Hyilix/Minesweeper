@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     static struct option long_options[] = {
         {"fps", required_argument, NULL, 1},
         {"visible", no_argument, NULL, 'V'},
-        {"fast_reveal", required_argument, NULL, 'r'},
+        {"no_fast_reveal", no_argument, NULL, 'r'},
         {0, 0, 0, 0}
     };
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
                 game_settings->map_y_size = atoi(optarg);
                 break;
             case 'r':
-                game_settings->allow_fast_reveal = str_to_bool(optarg);
+                game_settings->allow_fast_reveal = false;
                 break;
             case 'V':
                 game_settings->visible_hidden_bombs = true;
