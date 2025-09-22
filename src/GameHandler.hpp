@@ -4,15 +4,24 @@
 #include "Map.hpp"
 
 typedef struct {
-    // map number of tiles
+    // Game settings
     unsigned int map_x_size;
     unsigned int map_y_size;
-
     unsigned int bomb_count;
+
+    // Interface settings
+    bool allow_fast_reveal;
+    unsigned int fps;
+
+    // Dev settings
+    bool visible_hidden_bombs;
 } game_settings_t;
 
 #define GAME_OVER_TEXT "Game Over! Press ESC to quit"
-#define GAME_WON_TEXT "Game WON! Press ESC to quit"
+#define GAME_WON_TEXT "Congratulation, Game WON! Press ESC to quit"
+
+#define DEFAULT_FONT_PATH "assets/fonts/arialbd.ttf"
+#define DEFAULT_FONT_SIZE 24
 
 class GameHandler {
     public:
@@ -22,7 +31,7 @@ class GameHandler {
         bool game_started = false;
         bool game_ended = false;
 
-        void init(Uint32 flags = SDL_INIT_EVERYTHING);
+        void init(game_settings_t *settings, Uint32 flags = SDL_INIT_EVERYTHING);
         void create_window(char *name, int x, int y, int h, int w, Uint32 flags);
         void create_renderer(SDL_Window *window, int index, Uint32 flags);
 
@@ -40,7 +49,7 @@ class GameHandler {
 
         void set_running(bool value);
 
-        void create_map(game_settings_t *settings);
+        void create_map();
         void create_map_debug();
         Map *get_map();
 
@@ -50,6 +59,7 @@ class GameHandler {
         void apply_fps_limit();
 
     private:
+        game_settings_t *settings;
         void calculate_frame_delay(); 
 
         bool running = false;
@@ -61,7 +71,7 @@ class GameHandler {
         // background color
         SDL_Color color;
 
-        unsigned int FPS;
+        unsigned int FPS = 0;
         unsigned int frame_delay;
 
         SDL_Color tile_text_color = {0, 0, 0};

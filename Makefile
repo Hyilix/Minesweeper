@@ -3,7 +3,7 @@ CXXFLAGS = -I/usr/x86_64-w64-mingw32/include/SDL2
 LDFLAGS  =
 LDLIBS   = -lSDL2 -lSDL2_ttf
 
-OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o
+OBJECTS = main.o GameHandler.o Tile.o Map.o Randomiser.o Utils.o
 TARGET  = Minesweeper
 TARGET_WIN = Minesweeper.exe
 
@@ -21,10 +21,13 @@ build: $(TARGET)
 $(TARGET): $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
-%.o: %.cpp
+%.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
+	rm -f $(TARGET) *.o
+
+clean_all:
 	rm -f $(TARGET) *.o
 	rm -f $(TARGET_WIN) *.o
 

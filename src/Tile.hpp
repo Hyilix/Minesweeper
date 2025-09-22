@@ -10,7 +10,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "Custom_Types.h"
+#include "Utils.hpp"
 
 #define TILE_DEFAULT_SIZE 50
 
@@ -63,7 +63,7 @@ class Tile {
         void create_tile_rectangle();
         SDL_Rect get_tile_rectangle();
 
-        void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL);
+        void draw_tile(SDL_Renderer *renderer, TTF_Font *font = NULL, bool force_draw_bomb = false);
 
         void prep_text_rendering(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
 
@@ -82,8 +82,8 @@ class Tile {
         bool has_flag = false;
         bool has_bomb = false;
 
-        SDL_Color hidden_color;
-        SDL_Color exposed_color;
+        SDL_Color hidden_color = {180, 180, 180, 0};
+        SDL_Color exposed_color = {128, 128, 128, 0};
 
         SDL_Rect tile_rect;
 

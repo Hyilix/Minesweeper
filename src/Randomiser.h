@@ -5,7 +5,7 @@
 #include <ctime>
 #include <iostream>
 
-#include "Custom_Types.h"
+#include "Utils.hpp"
 
 #define DEFAULT_GRACE_SCALE 3
 
