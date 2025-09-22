@@ -5,18 +5,17 @@ A small project for learning C++ and SDL2.
 
 This project was aimed as an introductory step towards C++ Object-Oriented Programming and SDL2.
 
-Things aren't very optimised, and it is not a contender to other more serious Minesweeper applications. 
-
 > Feel free to use and modify to your heart's content.
 
 ## Settings
 
-By default, the game will open with a map of **10x20 with 70 bombs**.
-
 The executable can be run with the following flags:
-  * -b *bomb_count* -> Sets the amount of bombs on the map
-  * -w *tiles_width* -> Sets the amount of tiles on the X axis
-  * -h *tiles_height* -> Sets the amount of tiles on the Y axis
+  * `-b *bomb_count*` -> Sets the amount of bombs on the map. Default at `50`.
+  * `-w *tiles_width*` -> Sets the amount of tiles on the X axis. Default at `10`.
+  * `-h *tiles_height*` -> Sets the amount of tiles on the Y axis. Default at `20`.
+  * `--fps *fps_count*` -> Sets the in-game fps. `0` will remove the fps cap. Default at `255`.
+  * `--no_fast_reveal` or `-r` -> Disables the fast reveal tile function.
+  * `--visible` of `-V` -> Will show all the bombs on the grid. Intended for DEV.
 
 ## Building
 
