@@ -52,10 +52,10 @@ class Map {
         Randomiser_2D *get_randomiser();
 
         void set_bombs(std::vector<pair_uint> bombs);
-        void open_tiles(std::vector<pair_uint> tiles);
+        void open_tiles(std::vector<pair_uint> tiles, bool allow_fast_reveal);
         void reveal_all_bombs();
 
-        void tile_action(Tile *tile, uint8_t button);
+        void tile_action(Tile *tile, uint8_t button, bool allow_fast_reveal);
 
         void prep_tile_text(SDL_Renderer *renderer, SDL_Color color, TTF_Font *font);
 

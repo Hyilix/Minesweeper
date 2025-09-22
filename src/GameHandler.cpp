@@ -87,7 +87,7 @@ void GameHandler::event_handler() {
                         Tile *temp_tile = (this->get_map())->get_tile_from_position(mouse_x, mouse_y);
 
                         if (this->game_started) {
-                            map->tile_action(temp_tile, event.button.button);
+                            map->tile_action(temp_tile, event.button.button, this->settings->allow_fast_reveal);
 
                             // Game over
                             if (map->game_lost) {
@@ -116,7 +116,7 @@ void GameHandler::event_handler() {
                             this->get_map()->prep_tile_text(this->renderer, this->color, this->font);
 
                             std::vector<pair_uint> tiles = randomiser->get_grace_coordinates();
-                            this->get_map()->open_tiles(tiles);
+                            this->get_map()->open_tiles(tiles, this->settings->allow_fast_reveal);
 
                             // DEBUG PRINT
                             // randomiser->DEBUG_print_grid();

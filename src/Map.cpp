@@ -266,13 +266,13 @@ void Map::set_bombs(std::vector<pair_uint> bombs) {
     }
 }
 
-void Map::open_tiles(std::vector<pair_uint> tiles) {
+void Map::open_tiles(std::vector<pair_uint> tiles, bool allow_fast_reveal) {
     auto tiles_size = tiles.size();
 
     for (unsigned int i = 0; i < tiles_size; i++) {
         auto current_tile = tiles[i];
         Tile *temp_tile = this->tiles[current_tile.second][current_tile.first];
-        this->tile_action(temp_tile, LEFT_CLICK);
+        this->tile_action(temp_tile, LEFT_CLICK, allow_fast_reveal);
         // this->tiles[current_tile.second][current_tile.first]->click_action(LEFT_CLICK);
     }
 }
@@ -300,7 +300,10 @@ void Map::reveal_all_bombs() {
     }
 }
 
-void Map::tile_action(Tile *tile, uint8_t button) {
+void Map::tile_action(Tile *tile, uint8_t button, bool allow_fast_reveal) {
+    static bool do_fast_reveal = true;
+
+    bool was_tile_exposed = tile->is_exposed();
     bool bomb_detected = tile->click_action(button, &this->revealed_tiles);
 
     // if (bomb_pressed != NULL && *bomb_pressed == false) {
@@ -330,14 +333,15 @@ void Map::tile_action(Tile *tile, uint8_t button) {
                     }
 
                     if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                        this->tile_action(temp_tile, button);
+                        this->tile_action(temp_tile, button, allow_fast_reveal);
                     }
                 }
             }
         }
         // Fast click on an exposed tile with flags around it
         // to reveal all neighbors
-        else if (tile->is_exposed()) {
+        else if (tile->is_exposed() && was_tile_exposed && do_fast_reveal && allow_fast_reveal) {
+            do_fast_reveal = false;
             unsigned int flag_count = this->get_flags_around_tile(neighbors);
 
             if (flag_count == tile->get_tile_number()) {
@@ -345,18 +349,17 @@ void Map::tile_action(Tile *tile, uint8_t button) {
                     for (unsigned int x = 0; x < 3; x++) {
                         Tile *temp_tile = neighbors[y][x];
 
-                        if (temp_tile == NULL || (y == 0 && x == 0)) {
+                        if (temp_tile == NULL || (y == 1 && x == 1)) {
                             continue;
                         }
 
                         if (!temp_tile->is_exposed() && !temp_tile->is_flagged()) {
-                            // this->tile_action(temp_tile, button);
-                            temp_tile->click_action(button, &this->revealed_tiles);
-                            std::cout << temp_tile->get_raw_position().first << " " << temp_tile->get_raw_position().second;
+                            this->tile_action(temp_tile, button, allow_fast_reveal);
                         }
                     }
                 }
             }
+            do_fast_reveal = true;
         }
 
         for (unsigned int y = 0; y < 3; y++) {
