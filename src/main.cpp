@@ -4,11 +4,6 @@
 
 #include "GameHandler.hpp"
 
-// TODO: Add timer and bomb/flag count to window title
-// TODO: Stop bomb spawning neighboring only bombs
-// TODO: Code Cleanup
-// TODO: Update README
-
 int main(int argc, char *argv[]) {
     // Pointer to the main gamehandler.
     GameHandler *gamehandler = new GameHandler;
